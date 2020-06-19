@@ -1,2 +1,2 @@
-# react-udemy
-React - The Complete Guide on Udemy
+## React - The Complete Guide on Udemy
+Udemy course on React
