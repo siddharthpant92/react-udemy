@@ -46,12 +46,11 @@ class App extends Component {
         <h1>Section 4 - Assignment</h1>
         <input
           type="text"
-          onChange={this.calculateLength}
+          onChange={(event) => this.calculateLength(event)}
           value={this.state.text}
         ></input>
         <p>Text Length: {this.state.text.length}</p>
         <ValidationComponent textLength={this.state.text.length} />
-        {/* In the assignment solution, he did the splitting up here and we didn't need to pass a value back from child component */}
         <CharComponent
           enteredText={this.state.text}
           deleteCharacter={(indexToBeDeleted) =>
@@ -64,7 +63,8 @@ class App extends Component {
 
   calculateLength = (event) => {
     const enteredText = event.target.value;
-    this.setState({ text: enteredText});
+    const calculatedTextLength = enteredText.length;
+    this.setState({ text: enteredText, textLength: calculatedTextLength });
   };
 
   deleteCharacter = (indexToBeDeleted) => {
@@ -73,7 +73,7 @@ class App extends Component {
     
     const updatedText = udpatedTextArray.join("")
 
-    this.setState({ text: updatedText});
+    this.setState({ text: updatedText, textLength: updatedText.length });
   };
 
   nameChangeHandler = (event, personId) => {
