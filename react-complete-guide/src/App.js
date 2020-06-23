@@ -5,32 +5,31 @@ import "./App.css";
 class App extends Component {
   state = {
     persons: [
-      { name: "abcd", age: "23", temp: "123" },
-      { name: "efgh", age: 25 },
+      { id: "rytuj", name: "abcd", age: "23", temp: "123" },
+      { id: "rfvec", name: "efgh", age: 25 },
     ],
     showPersons: false,
   };
 
   render() {
     let persons = null;
+
     if (this.state.showPersons) {
       persons = (
+        // You can use for-each, but then you have to add each new Person object to an array and return that array to 'persons' to be rendered. array.map does that
         <div>
-          <Person
-            name={this.state.persons[0].name}
-            age={this.state.persons[0].age}
-            click={this.switchNameHandler.bind(this, "a")} // passing argument
-          >
-            Click me and see what happens. See the difference between the 2
-            input boxes
-          </Person>
-          <Person
-            name={this.state.persons[1].name}
-            age={this.state.persons[1].age}
-            changed={this.nameChangeHandler}
-          >
-            Did you get my information?
-          </Person>
+          {this.state.persons.map((person, index) => {
+            return (
+              <Person
+                name={person.name}
+                age={person.age}
+                key={person.id}
+                // click={this.deletePersonHandler.bind(this, index)}
+                click={() => this.deletePersonHandler(index)}
+                changed={(event) => this.nameChangeHandler(event, person.id)}
+              ></Person>
+            );
+          })}
         </div>
       );
     }
@@ -38,38 +37,28 @@ class App extends Component {
     return (
       <div className="App">
         <h1>I'm a react app!</h1>
-
         {persons}
-
-        <button
-          onClick={(event) => {
-            return this.switchNameHandler("b");
-          }}
-        >
-          Switch Name
-        </button>
-
         <button onClick={this.togglePersonHandler}>Toggle Persons</button>
       </div>
     );
   }
 
-  switchNameHandler = (name) => {
-    this.setState({
-      persons: [
-        { name: name, age: "23" },
-        { name: "mnop", age: 25 },
-      ],
-    });
+  nameChangeHandler = (event, personId) => {
+    const personIndex = this.state.persons.findIndex((p) => p.id === personId);
+    // Good practice to not mutate state directly
+    const updatedPersons = [...this.state.persons];
+
+    updatedPersons[personIndex].name = event.target.value;
+
+    this.setState({ persons: updatedPersons });
   };
 
-  nameChangeHandler = (event) => {
-    this.setState({
-      persons: [
-        { name: "c", age: "23" },
-        { name: event.target.value, age: 25 },
-      ],
-    });
+  deletePersonHandler = (personIndex) => {
+    // const person = this.state.persons
+    // Creating a copy of the original array, so that the original array is untouched - good practice
+    const persons = [...this.state.persons];
+    persons.splice(personIndex, 1);
+    this.setState({ persons: persons });
   };
 
   togglePersonHandler = () => {
