@@ -1,78 +1,102 @@
 import React, { Component } from "react";
 import Person from "./Person/Person";
-import UserInput from "./UserInput/UserInput";
-import UserOutput from "./UserOutput/UserOutput";
+import ValidationComponent from "./ValidationComponent/ValidationComponent";
+import CharComponent from "./CharComponent/CharComponent";
 import "./App.css";
 
 class App extends Component {
   state = {
     persons: [
-      { name: "abcd", age: "23", temp: "123" },
-      { name: "efgh", age: 25 },
+      { id: "rytuj", name: "abcd", age: "23", temp: "123" },
+      { id: "rfvec", name: "efgh", age: 25 },
     ],
-    username: "random_username"
+    showPersons: false,
+    text: "",
   };
 
   render() {
+    let persons = null;
+
+    if (this.state.showPersons) {
+      persons = (
+        // You can use for-each, but then you have to add each new Person object to an array and return that array to 'persons' to be rendered. array.map does that
+        <div>
+          {this.state.persons.map((person, index) => {
+            return (
+              <Person
+                name={person.name}
+                age={person.age}
+                key={person.id}
+                // click={this.deletePersonHandler.bind(this, index)}
+                click={() => this.deletePersonHandler(index)}
+                changed={(event) => this.nameChangeHandler(event, person.id)}
+              ></Person>
+            );
+          })}
+        </div>
+      );
+    }
+
     return (
       <div className="App">
         <h1>I'm a react app!</h1>
-        <Person
-          name={this.state.persons[0].name}
-          age={this.state.persons[0].age}
-          click={this.switchNameHandler.bind(this, "a")} // passing argument
-        >
-          Click me and see what happens
-        </Person>
-        <Person
-          name={this.state.persons[1].name}
-          age={this.state.persons[1].age}
-          changed={this.nameChangeHandler}
-        >
-          Did you get my information?
-        </Person>
+        {persons}
+        <button onClick={this.togglePersonHandler}>Toggle Persons</button>
 
-        <button
-          onClick={(event) => {
-            return this.switchNameHandler("b");
-          }}
-        >
-          Switch Name
-        </button>
-
-        <h1>Assignment</h1>
-
-        <UserInput
-          changeUsername={this.updateUserName}
-          currentValue={this.state.username}
+        <h1>Section 4 - Assignment</h1>
+        <input
+          type="text"
+          onChange={this.calculateLength}
+          value={this.state.text}
+        ></input>
+        <p>Text Length: {this.state.text.length}</p>
+        <ValidationComponent textLength={this.state.text.length} />
+        {/* In the assignment solution, he did the splitting up here and we didn't need to pass a value back from child component */}
+        <CharComponent
+          enteredText={this.state.text}
+          deleteCharacter={(indexToBeDeleted) =>
+            this.deleteCharacter(indexToBeDeleted)
+          }
         />
-        <UserOutput userName="username_1"> para 1 </UserOutput>
-        <UserOutput userName={this.state.username}> para 2 </UserOutput>
       </div>
     );
   }
 
-  switchNameHandler = (name) => {
-    this.setState({
-      persons: [
-        { name: name, age: "23" },
-        { name: "mnop", age: 25 },
-      ],
-    });
+  calculateLength = (event) => {
+    const enteredText = event.target.value;
+    this.setState({ text: enteredText});
   };
 
-  nameChangeHandler = (event) => {
-    this.setState({
-      persons: [
-        { name: "c", age: "23" },
-        { name: event.target.value, age: 25 },
-      ],
-    });
+  deleteCharacter = (indexToBeDeleted) => {
+    let udpatedTextArray = this.state.text.split("");
+    udpatedTextArray.splice(indexToBeDeleted, 1)
+    
+    const updatedText = udpatedTextArray.join("")
+
+    this.setState({ text: updatedText});
   };
 
-  updateUserName = (event) => {
-    this.setState({username: event.target.value})
-  }
+  nameChangeHandler = (event, personId) => {
+    const personIndex = this.state.persons.findIndex((p) => p.id === personId);
+    // Good practice to not mutate state directly
+    const updatedPersons = [...this.state.persons];
+
+    updatedPersons[personIndex].name = event.target.value;
+
+    this.setState({ persons: updatedPersons });
+  };
+
+  deletePersonHandler = (personIndex) => {
+    // const person = this.state.persons
+    // Creating a copy of the original array, so that the original array is untouched - good practice
+    const persons = [...this.state.persons];
+    persons.splice(personIndex, 1);
+    this.setState({ persons: persons });
+  };
+
+  togglePersonHandler = () => {
+    this.setState({ showPersons: !this.state.showPersons });
+  };
 }
 
 export default App;
