@@ -1,7 +1,5 @@
 import React, { Component } from "react";
 import Person from "./Person/Person";
-import ValidationComponent from "./ValidationComponent/ValidationComponent";
-import CharComponent from "./CharComponent/CharComponent";
 import "./App.css";
 
 class App extends Component {
@@ -11,7 +9,6 @@ class App extends Component {
       { id: "rfvec", name: "efgh", age: 25 },
     ],
     showPersons: false,
-    text: "",
   };
 
   render() {
@@ -42,39 +39,9 @@ class App extends Component {
         <h1>I'm a react app!</h1>
         {persons}
         <button onClick={this.togglePersonHandler}>Toggle Persons</button>
-
-        <h1>Section 4 - Assignment</h1>
-        <input
-          type="text"
-          onChange={(event) => this.calculateLength(event)}
-          value={this.state.text}
-        ></input>
-        <p>Text Length: {this.state.text.length}</p>
-        <ValidationComponent textLength={this.state.text.length} />
-        <CharComponent
-          enteredText={this.state.text}
-          deleteCharacter={(indexToBeDeleted) =>
-            this.deleteCharacter(indexToBeDeleted)
-          }
-        />
       </div>
     );
   }
-
-  calculateLength = (event) => {
-    const enteredText = event.target.value;
-    const calculatedTextLength = enteredText.length;
-    this.setState({ text: enteredText, textLength: calculatedTextLength });
-  };
-
-  deleteCharacter = (indexToBeDeleted) => {
-    let udpatedTextArray = this.state.text.split("");
-    udpatedTextArray.splice(indexToBeDeleted, 1)
-    
-    const updatedText = udpatedTextArray.join("")
-
-    this.setState({ text: updatedText, textLength: updatedText.length });
-  };
 
   nameChangeHandler = (event, personId) => {
     const personIndex = this.state.persons.findIndex((p) => p.id === personId);
