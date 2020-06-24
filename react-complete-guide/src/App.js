@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Person from "./Person/Person";
-import Radium from 'radium'
+import styled from "styled-components";
 import "./App.css";
 
 class App extends Component {
@@ -13,18 +13,19 @@ class App extends Component {
   };
 
   render() {
-    const style = {
-      backgroundColor: "green",
-      color: "white",
-      font: "inherit",
-      border: "1px solid blue",
-      padding: "8px",
-      cursor: "pointer",
-      ":hover": {
-        backgroundColor: "lightgreen",
-        color: "black"
+    // props.alt is passed from where StyledButton is used
+    const StyledButton = styled.button`
+      background-color: ${(props) => (props.alt ? 'red' : 'green')};
+      color: white;
+      font: inherit;
+      border: 1px solid blue;
+      padding: 8px;
+      cursor: pointer;
+      &:hover {
+        background-color: ${(props)=> (props.alt? 'orange': 'blue')};
+        color: black;
       }
-    };
+    `;
     let persons = null;
 
     if (this.state.showPersons) {
@@ -45,11 +46,11 @@ class App extends Component {
           })}
         </div>
       );
-      style.backgroundColor = "red";
-      style[":hover"] = {
-        backgroundColor: "blue",
-        color: "black"
-      }
+      // style.backgroundColor = "red";
+      // style[":hover"] = {
+      //   backgroundColor: "blue",
+      //   color: "black"
+      // }
     }
 
     let classes = [];
@@ -66,9 +67,12 @@ class App extends Component {
         <p className={classes.join(" ")}>
           Dynamic class styling. Delete a div to change the style dynamically
         </p>
-        <button style={style} onClick={this.togglePersonHandler}>
+        <StyledButton
+          alt={this.state.showPersons} // Controls the dynamic styling of the button
+          onClick={this.togglePersonHandler}
+        >
           Toggle Persons
-        </button>
+        </StyledButton>
         {persons}
       </div>
     );
@@ -97,4 +101,4 @@ class App extends Component {
   };
 }
 
-export default Radium(App);
+export default App;
