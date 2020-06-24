@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import Person from "./Person/Person";
-import styled from "styled-components";
 import "./App.css";
 
 class App extends Component {
@@ -13,19 +12,6 @@ class App extends Component {
   };
 
   render() {
-    // props.alt is passed from where StyledButton is used
-    const StyledButton = styled.button`
-      background-color: ${(props) => (props.alt ? 'red' : 'green')};
-      color: white;
-      font: inherit;
-      border: 1px solid blue;
-      padding: 8px;
-      cursor: pointer;
-      &:hover {
-        background-color: ${(props)=> (props.alt? 'orange': 'blue')};
-        color: black;
-      }
-    `;
     let persons = null;
 
     if (this.state.showPersons) {
@@ -46,11 +32,6 @@ class App extends Component {
           })}
         </div>
       );
-      // style.backgroundColor = "red";
-      // style[":hover"] = {
-      //   backgroundColor: "blue",
-      //   color: "black"
-      // }
     }
 
     let classes = [];
@@ -67,12 +48,9 @@ class App extends Component {
         <p className={classes.join(" ")}>
           Dynamic class styling. Delete a div to change the style dynamically
         </p>
-        <StyledButton
-          alt={this.state.showPersons} // Controls the dynamic styling of the button
-          onClick={this.togglePersonHandler}
-        >
+        <button className="button" onClick={this.togglePersonHandler}>
           Toggle Persons
-        </StyledButton>
+        </button>
         {persons}
       </div>
     );
