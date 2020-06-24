@@ -1,8 +1,7 @@
 import React, { Component } from "react";
 import Person from "./Person/Person";
-import ValidationComponent from "./ValidationComponent/ValidationComponent";
-import CharComponent from "./CharComponent/CharComponent";
-import "./App.css";
+// works only with react-scripts@2.0.0 and higher. For renaming css file see https://stackoverflow.com/questions/53062306/css-modules-not-working-for-react-version-16-6-0
+import styleClasses from "./App.module.css"; 
 
 class App extends Component {
   state = {
@@ -11,11 +10,11 @@ class App extends Component {
       { id: "rfvec", name: "efgh", age: 25 },
     ],
     showPersons: false,
-    text: "",
   };
 
   render() {
     let persons = null;
+    let btnClass = [styleClasses.button]; // from App.css
 
     if (this.state.showPersons) {
       persons = (
@@ -35,46 +34,33 @@ class App extends Component {
           })}
         </div>
       );
+      btnClass.push(styleClasses.button_red);
+    }
+
+    let assignedClasses = [];
+    if (this.state.persons.length <= 2) {
+      assignedClasses.push(styleClasses.red); // from App.css
+    }
+    if (this.state.persons.length <= 1) {
+      assignedClasses.push(styleClasses.bold); // from App.css
     }
 
     return (
-      <div className="App">
+      <div className={styleClasses.App}>
         <h1>I'm a react app!</h1>
+        <p className={assignedClasses.join(" ")}>
+          Dynamic class styling. Delete a div to change the style dynamically
+        </p>
+        <button
+          className={btnClass.join(" ")}
+          onClick={this.togglePersonHandler}
+        >
+          Toggle Persons
+        </button>
         {persons}
-        <button onClick={this.togglePersonHandler}>Toggle Persons</button>
-
-        <h1>Section 4 - Assignment</h1>
-        <input
-          type="text"
-          onChange={this.calculateLength}
-          value={this.state.text}
-        ></input>
-        <p>Text Length: {this.state.text.length}</p>
-        <ValidationComponent textLength={this.state.text.length} />
-        {/* In the assignment solution, he did the splitting up here and we didn't need to pass a value back from child component */}
-        <CharComponent
-          enteredText={this.state.text}
-          deleteCharacter={(indexToBeDeleted) =>
-            this.deleteCharacter(indexToBeDeleted)
-          }
-        />
       </div>
     );
   }
-
-  calculateLength = (event) => {
-    const enteredText = event.target.value;
-    this.setState({ text: enteredText});
-  };
-
-  deleteCharacter = (indexToBeDeleted) => {
-    let udpatedTextArray = this.state.text.split("");
-    udpatedTextArray.splice(indexToBeDeleted, 1)
-    
-    const updatedText = udpatedTextArray.join("")
-
-    this.setState({ text: updatedText});
-  };
 
   nameChangeHandler = (event, personId) => {
     const personIndex = this.state.persons.findIndex((p) => p.id === personId);
