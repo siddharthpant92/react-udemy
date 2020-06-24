@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Person from "./Person/Person";
-import "./App.css";
+// works only with react-scripts@2.0.0 and higher. For renaming css file see https://stackoverflow.com/questions/53062306/css-modules-not-working-for-react-version-16-6-0
+import styleClasses from "./App.module.css"; 
 
 class App extends Component {
   state = {
@@ -13,6 +14,7 @@ class App extends Component {
 
   render() {
     let persons = null;
+    let btnClass = [styleClasses.button]; // from App.css
 
     if (this.state.showPersons) {
       persons = (
@@ -32,23 +34,27 @@ class App extends Component {
           })}
         </div>
       );
+      btnClass.push(styleClasses.button_red);
     }
 
-    let classes = [];
+    let assignedClasses = [];
     if (this.state.persons.length <= 2) {
-      classes.push("red"); // from App.css
+      assignedClasses.push(styleClasses.red); // from App.css
     }
     if (this.state.persons.length <= 1) {
-      classes.push("bold"); // from App.css
+      assignedClasses.push(styleClasses.bold); // from App.css
     }
 
     return (
-      <div className="App">
+      <div className={styleClasses.App}>
         <h1>I'm a react app!</h1>
-        <p className={classes.join(" ")}>
+        <p className={assignedClasses.join(" ")}>
           Dynamic class styling. Delete a div to change the style dynamically
         </p>
-        <button className="button" onClick={this.togglePersonHandler}>
+        <button
+          className={btnClass.join(" ")}
+          onClick={this.togglePersonHandler}
+        >
           Toggle Persons
         </button>
         {persons}
