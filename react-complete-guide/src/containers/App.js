@@ -5,38 +5,42 @@ import Cockpit from "../components/Cockpit/Cockpit";
 import styleClasses from "./App.module.css";
 
 class App extends Component {
-  state = {
-    persons: [
-      { id: "rytuj", name: "abcd", age: "23", temp: "123" },
-      { id: "rfvec", name: "efgh", age: 25 },
-    ],
-    showPersons: false,
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      persons: [
+        { id: "rytuj", name: "abcd", age: "23", temp: "123" },
+        { id: "rfvec", name: "efgh", age: 25 },
+      ],
+      showPersons: false,
+      showCockpit: true,
+    };
 
-  render() {
-    let persons = null;
+    console.log("App.js constructor");
+  }
 
-    if (this.state.showPersons) {
-      persons = (
-        // You can use for-each, but then you have to add each new Person object to an array and return that array to 'persons' to be rendered. array.map does that
-        <Persons
-          persons={this.state.persons}
-          clicked={(index) => this.deletePersonHandler(index)}
-          changed={(event, personId) => this.nameChangeHandler(event, personId)}
-        />
-      );
-    }
+  static getDerivedStateFromProps(props, state) {
+    // https://reactjs.org/blog/2018/03/27/update-on-async-rendering.html#new-lifecycle-getderivedstatefromprops
+    console.log("App.js getDerivedStateFromProps: ", props);
+    return state;
+  }
 
-    return (
-      <div className={styleClasses.App}>
-        <Cockpit
-          personsLength={this.state.persons.length}
-          showPersons={this.state.showPersons}
-          togglePersonHandler={this.togglePersonHandler}
-        />
-        {persons}
-      </div>
-    );
+  componentDidMount() {
+    console.log("App.js componentDidMount");
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    console.log("App.js shouldComponentUpdate");
+
+    return true;
+  }
+
+  componentDidUpdate() {
+    console.log("App.js componentDidUpdate");
+  }
+
+  componentWillUnmount() {
+    console.log("App.js componentWillUnmount");
   }
 
   nameChangeHandler = (event, personId) => {
@@ -60,6 +64,42 @@ class App extends Component {
   togglePersonHandler = () => {
     this.setState({ showPersons: !this.state.showPersons });
   };
+
+  toggleCockPit = () => {
+    this.setState({ showCockpit: !this.state.showCockpit });
+  };
+
+  render() {
+    let persons = null;
+    console.log("App.js render");
+
+    if (this.state.showPersons) {
+      persons = (
+        // You can use for-each, but then you have to add each new Person object to an array and return that array to 'persons' to be rendered. array.map does that
+        <Persons
+          persons={this.state.persons}
+          clicked={this.deletePersonHandler}
+          changed={this.nameChangeHandler}
+        />
+      );
+    }
+
+    return (
+      <div className={styleClasses.App}>
+        {this.state.showCockpit ? (
+          <Cockpit
+            appTitle={this.props.appTitle} // passed from index.js
+            personsLength={this.state.persons.length}
+            showPersons={this.state.showPersons}
+            togglePersonHandler={this.togglePersonHandler}
+          />
+        ) : null}
+        <button onClick={this.toggleCockPit}>Toggle Cockpit component</button>
+
+        {persons}
+      </div>
+    );
+  }
 }
 
 export default App;
