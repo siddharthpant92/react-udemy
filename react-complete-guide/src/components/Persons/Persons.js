@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Person from "./Person/Person";
+import PropTypes from "prop-types";
 
 class Persons extends Component {
   // static getDerivedStateFromProps(props, state) {
@@ -51,5 +52,13 @@ class Persons extends Component {
     });
   }
 }
+
+Persons.propTypes = {
+  name: PropTypes.string,
+  age: PropTypes.number,
+  id: PropTypes.string,
+  clicked: PropTypes.func,
+  changed: PropTypes.func,
+};
 
 export default Persons;

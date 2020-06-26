@@ -9,11 +9,12 @@ class App extends Component {
     super(props);
     this.state = {
       persons: [
-        { id: "rytuj", name: "abcd", age: "23", temp: "123" },
+        { id: "rytuj", name: "abcd", age: 23, temp: "123" },
         { id: "rfvec", name: "efgh", age: 25 },
       ],
       showPersons: false,
       showCockpit: true,
+      changeCounter: 0,
     };
 
     console.log("App.js constructor");
@@ -50,7 +51,13 @@ class App extends Component {
 
     updatedPersons[personIndex].name = event.target.value;
 
-    this.setState({ persons: updatedPersons });
+    // https://reactjs.org/docs/state-and-lifecycle.html#state-updates-may-be-asynchronous
+    this.setState((prevState, props) => {
+      return {
+        persons: updatedPersons,
+        changeCounter: prevState.changeCounter + 1,
+      };
+    });
   };
 
   deletePersonHandler = (personIndex) => {

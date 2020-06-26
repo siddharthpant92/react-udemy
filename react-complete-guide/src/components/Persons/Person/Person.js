@@ -1,9 +1,25 @@
 import React, { Component } from "react";
 import PersonStyleClass from "./Person.module.css";
 import Aux from "../../../hoc/Aux";
+import withClass from "../../../hoc/withClass";
+import PropTypes from "prop-types";
 
 class Person extends Component {
   render() {
+    // return (
+    //   <div className={PersonStyleClass.person}>
+    //     <p onClick={this.props.click}>
+    //       Name: {this.props.name} | Age: {this.props.age}
+    //     </p>
+    //     <p>{this.props.children}</p>
+    //     <input
+    //       type="text"
+    //       onChange={this.props.changed}
+    //       value={this.props.name}
+    //     />
+    //     <p>____</p>
+    //   </div>
+    // );
     // returning array of elements without single root element
     // return [
     //   <br key="key_1"></br>,
@@ -56,7 +72,30 @@ class Person extends Component {
         <p>____</p>
       </Aux>
     );
+
+    // // higher order component with classes
+    // return (
+    //   <WithClass classes={PersonStyleClass.person}>
+    //     <p onClick={this.props.click}>
+    //       Name: {this.props.name} | Age: {this.props.age}
+    //     </p>
+    //     <p>{this.props.children}</p>
+    //     <input
+    //       type="text"
+    //       onChange={this.props.changed}
+    //       value={this.props.name}
+    //     />
+    //     <p>____</p>
+    //   </WithClass>
+    // );
   }
 }
 
-export default Person;
+Person.propTypes = {
+  click: PropTypes.func,
+  name: PropTypes.string,
+  age: PropTypes.string,
+  changed: PropTypes.func,
+};
+// Spread operator is used for the props
+export default withClass(Person, PersonStyleClass.person);
