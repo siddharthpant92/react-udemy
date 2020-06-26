@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import Person from "./Person/Person";
 
 class Persons extends Component {
-  
   // static getDerivedStateFromProps(props, state) {
   //   console.log("persons.js getDervedStateFromProps");
   //   return state;
@@ -11,20 +10,33 @@ class Persons extends Component {
   shouldComponentUpdate(nextProps, nextState) {
     // https://reactjs.org/docs/react-component.html#shouldcomponentupdate
     console.log("persons.js shouldComponentUpdate");
-    return true;
+    /*
+    if we directly return true (or don't have this lifecycle mthod at all), then everytime
+    the Cockpit component is toggled, this gets re-rendered. See log statements to verify.
+    In App.js, if anything changes, even if it's not supposed to affect the Persons component,
+    the render method is called which causes the re-render
+
+    The below if-else prevents the re-rendering
+    */
+    if (nextProps.persons !== this.props.persons) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   getSnapshotBeforeUpdate(prevProps, prevState) {
     console.log("persons.js getSnapshotBeforeUpdate");
-    return {message: "snapshot"}
+    return { message: "snapshot" };
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    console.log(snapshot)
+    console.log(snapshot);
     console.log("persons.js componentDidUpdate");
   }
 
   render() {
+    console.log("Persons.js render....");
     return this.props.persons.map((person, index) => {
       return (
         <Person
