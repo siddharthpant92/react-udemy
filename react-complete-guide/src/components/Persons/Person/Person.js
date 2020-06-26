@@ -3,8 +3,17 @@ import PersonStyleClass from "./Person.module.css";
 import Aux from "../../../hoc/Aux";
 import withClass from "../../../hoc/withClass";
 import PropTypes from "prop-types";
+import AuthContext from "../../../context/auth-context";
 
 class Person extends Component {
+  static contextType = AuthContext;
+
+  componentDidMount() {
+    console.log("Person.js componentDidMount");
+    // This gets mapped to contextType
+    console.log("authenticated: ", this.context.authenticated);
+  }
+
   render() {
     // return (
     //   <div className={PersonStyleClass.person}>
@@ -60,6 +69,11 @@ class Person extends Component {
     // returning a higher order component which pretends to be the root element
     return (
       <Aux>
+        {this.context.authenticated ? (
+          <p>Authenticated</p>
+        ) : (
+          <p>Not authenticated</p>
+        )}
         <p onClick={this.props.click}>
           Name: {this.props.name} | Age: {this.props.age}
         </p>
@@ -94,7 +108,7 @@ class Person extends Component {
 Person.propTypes = {
   click: PropTypes.func,
   name: PropTypes.string,
-  age: PropTypes.string,
+  age: PropTypes.number,
   changed: PropTypes.func,
 };
 // Spread operator is used for the props

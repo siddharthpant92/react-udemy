@@ -1,7 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import CockpitStyleClasses from "./Cockpit.module.css";
+import AuthContext from "../../context/auth-context";
 
 const cockpit = (props) => {
+  const authContext = useContext(AuthContext)
+  console.log("Cockpit.js authContext: ", authContext.authenticated)
   // useEffect is componentDidMount, componentDidUpdate, and componentWillUnmount combined
   useEffect(() => {
     console.log(
@@ -58,6 +61,7 @@ const cockpit = (props) => {
       >
         Toggle Persons
       </button>
+       <button onClick={authContext.login}>Mock Log in</button>
     </div>
   );
 };

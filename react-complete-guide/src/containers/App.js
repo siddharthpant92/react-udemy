@@ -3,6 +3,7 @@ import Persons from "../components/Persons/Persons";
 import Cockpit from "../components/Cockpit/Cockpit";
 // works only with react-scripts@2.0.0 and higher. For renaming css file see https://stackoverflow.com/questions/53062306/css-modules-not-working-for-react-version-16-6-0
 import styleClasses from "./App.module.css";
+import AuthContext from "../context/auth-context";
 
 class App extends Component {
   constructor(props) {
@@ -15,6 +16,7 @@ class App extends Component {
       showPersons: false,
       showCockpit: true,
       changeCounter: 0,
+      authenticated: false,
     };
 
     console.log("App.js constructor");
@@ -76,6 +78,10 @@ class App extends Component {
     this.setState({ showCockpit: !this.state.showCockpit });
   };
 
+  loginHandler = () => {
+    this.setState({ authenticated: !this.state.authenticated });
+  }
+
   render() {
     let persons = null;
     console.log("App.js render");
@@ -93,17 +99,23 @@ class App extends Component {
 
     return (
       <div className={styleClasses.App}>
-        {this.state.showCockpit ? (
-          <Cockpit
-            appTitle={this.props.appTitle} // passed from index.js
-            personsLength={this.state.persons.length}
-            showPersons={this.state.showPersons}
-            togglePersonHandler={this.togglePersonHandler}
-          />
-        ) : null}
         <button onClick={this.toggleCockPit}>Toggle Cockpit component</button>
-
-        {persons}
+        <AuthContext.Provider
+          value={{
+            authenticated: this.state.authenticated, // This value is set from 'Cockpit' component used directly in 'person' component without passing it through 'Persons' component
+            login: this.loginHandler,
+          }}
+        >
+          {this.state.showCockpit ? (
+            <Cockpit
+              appTitle={this.props.appTitle} // passed from index.js
+              personsLength={this.state.persons.length}
+              showPersons={this.state.showPersons}
+              togglePersonHandler={this.togglePersonHandler}
+            />
+          ) : null}
+          {persons}
+        </AuthContext.Provider>
       </div>
     );
   }
