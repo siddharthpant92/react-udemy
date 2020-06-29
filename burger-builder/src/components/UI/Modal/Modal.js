@@ -5,7 +5,7 @@ import Backdrop from "../Backdrop/Backdrop"
 
 const modal = (props) => (
   <Aux>
-    <Backdrop show={props.show} click={props.modalClosed}/>
+    <Backdrop show={props.show} backdropClicked={props.modalClosed} />
     <div
       className={ModalStyle.Modal}
       style={{
