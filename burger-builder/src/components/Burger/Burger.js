@@ -17,7 +17,7 @@ const burger = (props) => {
         );
       });
     })
-    .reduce((arr, el, index) => {
+    .reduce((arr, el) => {
       // Without the reduce function, we get an array of arrays, where each array element is an object.
       // The reduce function flattens it out to give us a single array of objects
       return arr.concat(el);

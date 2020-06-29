@@ -21,42 +21,67 @@ class BurgerBuilder extends Component {
         meat: 0,
       },
       totalPrice: 4,
+      purchasable: false,
     };
   }
 
   addIngredientHandler = (type) => {
-    const oldCount = this.state.ingredients[type];
-    const updatedCount = oldCount + 1;
+    this.setState((prevState) => {
+      const oldCount = prevState.ingredients[type];
+      const updatedCount = oldCount + 1;
 
-    const updatedIngredients = {
-      ...this.state.ingredients,
-    };
-    updatedIngredients[type] = updatedCount;
+      const updatedIngredients = {
+        ...prevState.ingredients,
+      };
+      updatedIngredients[type] = updatedCount;
 
-    const priceAddition = INGREDIENT_PRICES[type];
-    const oldTotal = this.state.totalPrice;
-    const newTotal = oldTotal + priceAddition;
+      const priceAddition = INGREDIENT_PRICES[type];
+      const oldTotal = prevState.totalPrice;
+      const newTotal = oldTotal + priceAddition;
 
-    this.setState({ ingredients: updatedIngredients, totalPrice: newTotal });
+      return { ingredients: updatedIngredients, totalPrice: newTotal };
+    });
+
+    this.checkPurchesedState();
   };
 
   removeIngredientHandler = (type) => {
-    const oldCount = this.state.ingredients[type];
-    if (oldCount === 0) {
-      alert("cannot remove " + type);
-    }
-    const updatedCount = oldCount - 1;
+    this.setState((prevState) => {
+      const oldCount = prevState.ingredients[type];
+      if (oldCount === 0) {
+        alert("cannot remove " + type);
+      }
+      const updatedCount = oldCount - 1;
 
-    const updatedIngredients = {
-      ...this.state.ingredients,
-    };
-    updatedIngredients[type] = updatedCount;
+      const updatedIngredients = {
+        ...prevState.ingredients,
+      };
+      updatedIngredients[type] = updatedCount;
 
-    const priceAddition = INGREDIENT_PRICES[type];
-    const oldTotal = this.state.totalPrice;
-    const newTotal = oldTotal - priceAddition;
+      const priceAddition = INGREDIENT_PRICES[type];
+      const oldTotal = prevState.totalPrice;
+      const newTotal = oldTotal - priceAddition;
 
-    this.setState({ ingredients: updatedIngredients, totalPrice: newTotal });
+      return { ingredients: updatedIngredients, totalPrice: newTotal };
+    });
+
+    this.checkPurchesedState();
+  };
+
+  checkPurchesedState = () => {
+    // Reliable way to get previous state
+    this.setState((prevState) => {
+      const ingredients = { ...prevState.ingredients };
+
+      const sum = Object.keys(ingredients)
+        .map((ingredientName) => {
+          return ingredients[ingredientName];
+        })
+        .reduce((sum, el) => {
+          return sum + el;
+        }, 0);
+      return { purchasable: sum > 0 };
+    });
   };
 
   render() {
@@ -78,6 +103,8 @@ class BurgerBuilder extends Component {
             this.removeIngredientHandler(ingredientType)
           }
           disabled={disabledInfo}
+          price={this.state.totalPrice}
+          purchasable={this.state.purchasable}
         />
       </Aux>
     );
