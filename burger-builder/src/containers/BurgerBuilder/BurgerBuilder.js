@@ -87,12 +87,16 @@ class BurgerBuilder extends Component {
     });
   };
 
-  confirmPurchaseHandler = () => {
+  continuePurchase = () => {
     this.setState({ orderConfirmed: true });
   };
 
   purchaseCancelHandler = () => {
     this.setState({ orderConfirmed: false });
+  };
+
+  purchaseConfirmHandler = () => {
+    alert("Confirmed")
   };
 
   render() {
@@ -109,7 +113,12 @@ class BurgerBuilder extends Component {
           show={this.state.orderConfirmed}
           modalClosed={this.purchaseCancelHandler}
         >
-          <OrderSummary ingredients={this.state.ingredients} />
+          <OrderSummary
+            ingredients={this.state.ingredients}
+            purchaseCancelled={this.purchaseCancelHandler}
+            purchaseConfirmed={this.purchaseConfirmHandler}
+            totalPrice={this.state.totalPrice}
+          />
         </Modal>
         <Burger ingredients={this.state.ingredients} />
         <BuildControls
@@ -122,7 +131,7 @@ class BurgerBuilder extends Component {
           disabled={disabledInfo}
           price={this.state.totalPrice}
           purchasable={this.state.purchasable}
-          confirmOrder={this.confirmPurchaseHandler}
+          continuePurchase={this.continuePurchase}
         />
       </Aux>
     );
