@@ -6,6 +6,7 @@ import Modal from "../../components/UI/Modal/Modal";
 import OrderSummary from "../../components/Burger/OrderSummary/OrderSummary";
 import axiosInstance from "../../axios-orders";
 import Spinner from "../../components/UI/Spinner/Spinner";
+import ErrorModal from "../../components/UI/ErrorModal/ErrorModal";
 
 const INGREDIENT_PRICES = {
   salad: 1,
@@ -28,6 +29,7 @@ class BurgerBuilder extends Component {
       purchasable: false,
       orderConfirmed: false,
       loading: false,
+      saveOrderError: false,
     };
   }
 
@@ -95,7 +97,8 @@ class BurgerBuilder extends Component {
   };
 
   purchaseCancelHandler = () => {
-    this.setState({ orderConfirmed: false });
+    console.log("purchaseCancelHandler");
+    this.setState({ orderConfirmed: false, saveOrderError: false });
   };
 
   purchaseConfirmHandler = () => {
@@ -117,7 +120,11 @@ class BurgerBuilder extends Component {
         console.log(response);
       })
       .catch((error) => {
-        this.setState({ loading: false, orderConfirmed: false });
+        this.setState({
+          loading: false,
+          orderConfirmed: false,
+          saveOrderError: true,
+        });
         console.log("ERROR: ", error);
       });
   };
@@ -144,12 +151,19 @@ class BurgerBuilder extends Component {
 
     return (
       <Aux>
-        <Modal
-          show={this.state.orderConfirmed}
-          modalClosed={this.purchaseCancelHandler}
-        >
-          {orderSummary}
-        </Modal>
+        {this.state.saveOrderError ? (
+          <ErrorModal
+            show={this.state.saveOrderError}
+            modalClosed={this.purchaseCancelHandler}
+          />
+        ) : (
+          <Modal
+            show={this.state.orderConfirmed}
+            modalClosed={this.purchaseCancelHandler}
+          >
+            {orderSummary}
+          </Modal>
+        )}
         <Burger ingredients={this.state.ingredients} />
         <BuildControls
           addIngredient={
