@@ -10,7 +10,6 @@ class Layout extends Component {
   };
 
   sideDrawerClosedHandler = () => {
-    console.log("clicked");
     this.setState({ showSideDrawer: false });
   };
 

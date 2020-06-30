@@ -19,18 +19,32 @@ class BurgerBuilder extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      ingredients: {
-        salad: 0,
-        bacon: 0,
-        cheese: 0, // 2 slices of cheese
-        meat: 0,
-      },
-      totalPrice: 4,
+      ingredients: null,
+      totalPrice: 9, //hard coded based on the ingredients stored in firebase
       purchasable: false,
       orderConfirmed: false,
       loading: false,
-      saveOrderError: false,
+      firebaseRequestError: false,
     };
+  }
+
+  componentDidMount() {
+    // Valid lifecycle method for side affects like making an api call
+    // Fetching the ingredients for a base burger for initial state
+    axiosInstance
+      .get("/ingredients.json")
+      .then((response) => {
+        this.setState({ ingredients: response.data });
+        this.checkPurchesedState();
+      })
+      .catch((error) => {
+        console.log("componentDidMount ERROR: ", error);
+        this.setState({
+          loading: false,
+          orderConfirmed: false,
+          firebaseRequestError: true,
+        });
+      });
   }
 
   addIngredientHandler = (type) => {
@@ -97,8 +111,7 @@ class BurgerBuilder extends Component {
   };
 
   purchaseCancelHandler = () => {
-    console.log("purchaseCancelHandler");
-    this.setState({ orderConfirmed: false, saveOrderError: false });
+    this.setState({ orderConfirmed: false, firebaseRequestError: false });
   };
 
   purchaseConfirmHandler = () => {
@@ -117,19 +130,19 @@ class BurgerBuilder extends Component {
       .post("/orders.json", order)
       .then((response) => {
         this.setState({ loading: false, orderConfirmed: false });
-        console.log(response);
       })
       .catch((error) => {
+        console.log("purchaseConfirmHandler ERROR: ", error);
         this.setState({
           loading: false,
           orderConfirmed: false,
-          saveOrderError: true,
+          firebaseRequestError: true,
         });
-        console.log("ERROR: ", error);
       });
   };
 
   render() {
+    // Finding out for which ingredients the 'Less' button should be disabled
     const disabledInfo = {
       ...this.state.ingredients,
     };
@@ -137,23 +150,51 @@ class BurgerBuilder extends Component {
       disabledInfo[key] = disabledInfo[key] <= 0;
     }
 
-    let orderSummary = (
-      <OrderSummary
-        ingredients={this.state.ingredients}
-        purchaseCancelled={this.purchaseCancelHandler}
-        purchaseConfirmed={this.purchaseConfirmHandler}
-        totalPrice={this.state.totalPrice}
-      />
-    );
+    let orderSummary = null;
     if (this.state.loading) {
       orderSummary = <Spinner />;
     }
 
+    let burger = null;
+
+    if (!this.state.ingredients) {
+      // Initially before the GET request to fetch ingredients hasn't completed, display the spinner
+      burger = <Spinner />;
+    } else {
+      // Create the burger with the base ingredients fetched from firebase
+      burger = (
+        <Aux>
+          <Burger ingredients={this.state.ingredients} />;
+          <BuildControls
+            addIngredient={
+              (ingredientType) => this.addIngredientHandler(ingredientType) // Getting a value passed back from BuildControls
+            }
+            removeIngredient={(ingredientType) =>
+              this.removeIngredientHandler(ingredientType)
+            }
+            disabled={disabledInfo}
+            price={this.state.totalPrice}
+            purchasable={this.state.purchasable}
+            continuePurchase={this.continuePurchase}
+          />
+        </Aux>
+      );
+      // Creating thr OrderSummary component after we get the ingredients list
+      orderSummary = (
+        <OrderSummary
+          ingredients={this.state.ingredients}
+          purchaseCancelled={this.purchaseCancelHandler}
+          purchaseConfirmed={this.purchaseConfirmHandler}
+          totalPrice={this.state.totalPrice}
+        />
+      );
+    }
+
     return (
       <Aux>
-        {this.state.saveOrderError ? (
+        {this.state.firebaseRequestError ? (
           <ErrorModal
-            show={this.state.saveOrderError}
+            show={this.state.firebaseRequestError}
             modalClosed={this.purchaseCancelHandler}
           />
         ) : (
@@ -164,19 +205,7 @@ class BurgerBuilder extends Component {
             {orderSummary}
           </Modal>
         )}
-        <Burger ingredients={this.state.ingredients} />
-        <BuildControls
-          addIngredient={
-            (ingredientType) => this.addIngredientHandler(ingredientType) // Getting a value passed back from BuildControls
-          }
-          removeIngredient={(ingredientType) =>
-            this.removeIngredientHandler(ingredientType)
-          }
-          disabled={disabledInfo}
-          price={this.state.totalPrice}
-          purchasable={this.state.purchasable}
-          continuePurchase={this.continuePurchase}
-        />
+        {burger}
       </Aux>
     );
   }

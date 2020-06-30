@@ -4,7 +4,6 @@ import Aux from "../../../hoc/Aux/Aux";
 import Backdrop from "../Backdrop/Backdrop";
 
 const errorModal = (props) => {
-  console.log("errorModal: ", props.show);
   return (
     <Aux>
       <Backdrop show={props.show} backdropClicked={props.modalClosed} />
@@ -15,7 +14,7 @@ const errorModal = (props) => {
           opacity: props.show ? "1" : "0",
         }}
       >
-        Error in saving order
+        Error in performing request
       </div>
     </Aux>
   );
