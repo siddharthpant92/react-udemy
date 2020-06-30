@@ -5,7 +5,8 @@ import Backdrop from "../Backdrop/Backdrop";
 
 class Modal extends Component {
   shouldComponentUpdate(nextProps, nextState) {
-    return nextProps.show !== this.props.show;
+    // Comparing children, since the component should re-render for OrderSummary and Spinner child components
+    return nextProps.show !== this.props.show || this.props.children !== nextProps.children;
   }
 
   render() {
