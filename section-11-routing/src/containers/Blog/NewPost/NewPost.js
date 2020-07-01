@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import axios from "axios";
+import { Redirect } from "react-router-dom";
 
 import "./NewPost.module.css";
 
@@ -8,6 +9,7 @@ class NewPost extends Component {
     title: "",
     content: "",
     author: "Max",
+    newPostSubmitted: false,
   };
 
   componentDidMount() {
@@ -21,13 +23,23 @@ class NewPost extends Component {
       author: this.state.author,
     };
     axios.post("/posts", data).then((response) => {
-      console.log(response);
+      console.log("NewPost postDataHandler response", response);
+      // If we use 'push' instead of 'replace', we're actually pushing a new page onto the stack and navigating to it
+      // The way the back button works will be different. 'replace' is similar to setting the state and conditionally redirecting with component
+      // this.props.history.replace("/posts")
+      this.setState({newPostSubmitted: true})
     });
   };
 
   render() {
+    let redirect = null
+    if(this.state.newPostSubmitted) {
+      console.log("NewPost render redirecting")
+      redirect = <Redirect to="/posts" />
+    }
     return (
       <div className="NewPost">
+        {redirect}
         <h1>Add a Post</h1>
         <label>Title</label>
         <input

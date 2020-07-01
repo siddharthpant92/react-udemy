@@ -25,7 +25,7 @@ class FullPost extends Component {
     axios
       .get("/posts/" + this.props.match.params.id)
       .then((response) => {
-        console.log(response);
+        console.log("FullPost getData response", response);
         this.setState({ loadedPost: response.data });
       })
       .catch((error) => {
@@ -35,7 +35,7 @@ class FullPost extends Component {
 
   deletePostHandler = () => {
     axios.delete("/posts/" + this.props.match.params.id).then((response) => {
-      console.log(response);
+      console.log("FullPost deletePostHandler response", response);
     });
   };
 
