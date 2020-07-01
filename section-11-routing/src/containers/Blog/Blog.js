@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Route, NavLink, Switch } from "react-router-dom";
 import Posts from "./Posts/Posts";
-import FullPost from "./FullPost/FullPost";
 import NewPost from "./NewPost/NewPost";
 import "./Blog.module.css";
 
@@ -13,7 +12,7 @@ class Blog extends Component {
           <nav>
             <ul>
               <li>
-                <NavLink to="/" exact activeClassName="myActive">
+                <NavLink to="/posts" exact activeClassName="myActive">
                   Home
                 </NavLink>
               </li>
@@ -25,15 +24,21 @@ class Blog extends Component {
             </ul>
           </nav>
         </header>
-        <Switch>
+        {/* Switch is commented out since Posts.js has nested route, we don't need to handle for dynamic routing prefix matching issue */}
+        {/* <Switch>
           <Route path="/" exact component={Posts} />
-          <Route path="/new-post" component={NewPost} />
-          {/* <Route path="/:id" exact component={FullPost} /> */}
-          {/* even /new-post is treated as a matching route since :id could be anything. 
+          <Route path="/new-post" exact component={NewPost} />
+          <Route path="/:id" exact component={FullPost} /> */}
+        {/* <Route path="/:id" exact component={FullPost} /> */}
+        {/* even /new-post is treated as a matching route since :id could be anything. 
           So we could do something like /post/:id and change the path in Posts.js as well to prevent /new-post from rendering.
           The reason we register /:id after /new-post is so that inside the switch, new-post is not considered as a dynamic parameter
         */}
-          <Route path="/:id" exact component={FullPost} />
+        {/* </Switch> */}
+
+        <Switch>
+          <Route path="/posts" component={Posts} />
+          <Route path="/new-post" component={NewPost} />
         </Switch>
       </div>
     );
