@@ -13,7 +13,6 @@ class Posts extends Component {
   }
 
   componentDidMount() {
-    console.log("Posts componentDidMount props: ", this.props);
     axios
       .get("/posts")
       .then((response) => {
@@ -34,7 +33,11 @@ class Posts extends Component {
   }
 
   postSelectedHandler = (id) => {
-    this.setState({ selectedPostId: id });
+    // this.setState({ selectedPostId: id });
+    // Navigating programmatically
+    this.props.history.push({
+      pathname: "/" + id,
+    });
   };
 
   render() {
@@ -42,20 +45,21 @@ class Posts extends Component {
     if (!this.state.error) {
       posts = this.state.posts.map((post) => {
         return (
-          <Link
-            to={{
-              pathname: "/" + post.id,
-              customProps: "temp",
-            }}
-            key={post.id}
-            params={{ temp: "temp" }}
-          >
+          // <Link
+          //   to={{
+          //     pathname: "/" + post.id,
+          //     customProps: "temp",
+          //   }}
+          //   key={post.id}
+          //   params={{ temp: "temp" }}
+          // >
             <Post
               title={post.title}
+              key={post.id}
               author={post.author}
               clicked={() => this.postSelectedHandler(post.id)}
             />
-          </Link>
+          // </Link>
         );
       });
     }
