@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import axios from "../../../axios";
-import Post from "../../../components/Post/Post"
-import "./Posts.module.css"
+import Post from "../../../components/Post/Post";
+import { Link } from "react-router-dom";
+import "./Posts.module.css";
 
 class Posts extends Component {
   constructor(props) {
@@ -12,7 +13,7 @@ class Posts extends Component {
   }
 
   componentDidMount() {
-    console.log("Posts componentDidMount props: ", this.props)
+    console.log("Posts componentDidMount props: ", this.props);
     axios
       .get("/posts")
       .then((response) => {
@@ -41,12 +42,20 @@ class Posts extends Component {
     if (!this.state.error) {
       posts = this.state.posts.map((post) => {
         return (
-          <Post
+          <Link
+            to={{
+              pathname: "/" + post.id,
+              customProps: "temp",
+            }}
             key={post.id}
-            title={post.title}
-            author={post.author}
-            clicked={() => this.postSelectedHandler(post.id)}
-          />
+            params={{ temp: "temp" }}
+          >
+            <Post
+              title={post.title}
+              author={post.author}
+              clicked={() => this.postSelectedHandler(post.id)}
+            />
+          </Link>
         );
       });
     }
