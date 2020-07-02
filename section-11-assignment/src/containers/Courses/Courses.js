@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Aux from "../../hoc/Aux";
 import "./Courses.css";
-import { Link, Route } from "react-router-dom";
+import { Link, Route, Redirect } from "react-router-dom";
 import Course from "../Course/Course";
 
 class Courses extends Component {
@@ -41,6 +41,7 @@ class Courses extends Component {
                     customParams: {
                       courseId: course.id,
                     },
+                    search: "course=" + encodeURIComponent(course.title),
                   }}
                   key={course.id}
                 >
@@ -54,6 +55,7 @@ class Courses extends Component {
               );
             })}
           </section>
+          <Redirect from="courses/:id" to="/courses" />
         </Aux>
       );
     }
