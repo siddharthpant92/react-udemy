@@ -2,12 +2,13 @@ import React, { Component } from "react";
 import { BrowserRouter, Route, Switch, NavLink } from "react-router-dom";
 import Courses from "./containers/Courses/Courses";
 import Users from "./containers/Users/Users";
+import Aux from "./hoc/Aux"
 import "./App.module.css";
 
 class App extends Component {
   render() {
     const home = (
-      <div>
+      <Aux>
         <header className="AppHeader">
           <nav>
             <ul>
@@ -49,7 +50,7 @@ class App extends Component {
             page)
           </li>
         </ol>
-      </div>
+      </Aux>
     );
     return (
       <div className="App">

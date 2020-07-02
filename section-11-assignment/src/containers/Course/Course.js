@@ -2,6 +2,7 @@ import React, { Component } from "react";
 
 class Course extends Component {
   render() {
+		console.log("Course.js")
     return (
       <div>
         <h1>_COURSE_TITLE_</h1>
