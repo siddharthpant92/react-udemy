@@ -2,25 +2,13 @@ import React, { Component } from "react";
 import { BrowserRouter, Route, Switch, NavLink } from "react-router-dom";
 import Courses from "./containers/Courses/Courses";
 import Users from "./containers/Users/Users";
-import Aux from "./hoc/Aux"
+import Aux from "./hoc/Aux";
 import "./App.module.css";
 
 class App extends Component {
   render() {
     const home = (
       <Aux>
-        <header className="AppHeader">
-          <nav>
-            <ul>
-              <li>
-                <NavLink to="/users">Users</NavLink>
-              </li>
-              <li>
-                <NavLink to="/courses">Courses</NavLink>
-              </li>
-            </ul>
-          </nav>
-        </header>
         <ol style={{ textAlign: "left" }}>
           <li>
             Add Routes to load "Users" and "Courses" on different pages (by
@@ -53,15 +41,30 @@ class App extends Component {
       </Aux>
     );
     return (
-      <div className="App">
-        <BrowserRouter>
+      <BrowserRouter>
+        <div className="App">
+          <header className="AppHeader">
+            <nav>
+              <ul>
+                <li>
+                  <NavLink to="/">Instructions</NavLink>
+                </li>
+                <li>
+                  <NavLink to="/users">Users</NavLink>
+                </li>
+                <li>
+                  <NavLink to="/courses">Courses</NavLink>
+                </li>
+              </ul>
+            </nav>
+          </header>
           <Switch>
             <Route path="/users" component={Users} />
             <Route path="/courses" component={Courses} />
             <Route path="/" render={() => home} />
           </Switch>
-        </BrowserRouter>
-      </div>
+        </div>
+      </BrowserRouter>
     );
   }
 }
