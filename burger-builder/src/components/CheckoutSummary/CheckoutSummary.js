@@ -4,6 +4,7 @@ import Button from "../UI/Button/Button";
 import CheckoutSummaryStyle from "./CheckoutSummary.module.css";
 
 const checkoutSummary = (props) => {
+  console.log("checkoutsummary: ", props)
   return (
     <div className={CheckoutSummaryStyle.CheckoutSummary}>
       <div style={{ width: "100%", margin: "auto" }}>
