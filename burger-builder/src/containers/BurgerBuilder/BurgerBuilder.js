@@ -115,30 +115,31 @@ class BurgerBuilder extends Component {
   };
 
   purchaseConfirmHandler = () => {
-    this.setState({ loading: true });
-    // baseUrl defined in axios-orders.js
-    const order = {
-      ingredients: this.state.ingredients,
-      price: this.state.totalPrice,
-      customer: {
-        name: "Sid",
-        email: "sid@test.com",
-      },
-    };
+    // this.setState({ loading: true });
+    // // baseUrl defined in axios-orders.js
+    // const order = {
+    //   ingredients: this.state.ingredients,
+    //   price: this.state.totalPrice,
+    //   customer: {
+    //     name: "Sid",
+    //     email: "sid@test.com",
+    //   },
+    // };
 
-    axiosInstance
-      .post("/orders.json", order)
-      .then((response) => {
-        this.setState({ loading: false, orderConfirmed: false });
-      })
-      .catch((error) => {
-        console.log("purchaseConfirmHandler ERROR: ", error);
-        this.setState({
-          loading: false,
-          orderConfirmed: false,
-          firebaseRequestError: true,
-        });
-      });
+    // axiosInstance
+    //   .post("/orders.json", order)
+    //   .then((response) => {
+    //     this.setState({ loading: false, orderConfirmed: false });
+    //   })
+    //   .catch((error) => {
+    //     console.log("purchaseConfirmHandler ERROR: ", error);
+    //     this.setState({
+    //       loading: false,
+    //       orderConfirmed: false,
+    //       firebaseRequestError: true,
+    //     });
+    //   });
+    this.props.history.push("/checkout")
   };
 
   render() {
