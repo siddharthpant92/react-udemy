@@ -38,6 +38,9 @@ class Courses extends Component {
                 <Link
                   to={{
                     pathname: "/courses/" + course.id,
+                    customParams: {
+                      courseId: course.id,
+                    },
                   }}
                   key={course.id}
                 >
