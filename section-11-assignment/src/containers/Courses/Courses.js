@@ -1,7 +1,6 @@
 import React, { Component } from "react";
-import Aux from "../../hoc/Aux";
 import "./Courses.css";
-import { Link, Route, Redirect } from "react-router-dom";
+import { Link, Route } from "react-router-dom";
 import Course from "../Course/Course";
 
 class Courses extends Component {
