@@ -24,7 +24,6 @@ class Blog extends Component {
             </ul>
           </nav>
         </header>
-        {/* Switch is commented out since Posts.js has nested route, we don't need to handle for dynamic routing prefix matching issue */}
         {/* <Switch>
           <Route path="/" exact component={Posts} />
           <Route path="/new-post" exact component={NewPost} />
@@ -36,11 +35,12 @@ class Blog extends Component {
         */}
         {/* </Switch> */}
 
+        {/* See  Posts.js for nested routes */}
         <Switch>
           <Route path="/posts" component={Posts} />
           <Route path="/new-post" component={NewPost} />
           {/* From is required only inside the Switch. See NewPost.js */}
-          <Redirect from="/" to="/posts" />
+          {/* <Redirect from="/" to="/posts" /> */}
         </Switch>
       </div>
     );
