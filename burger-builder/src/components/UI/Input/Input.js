@@ -10,7 +10,7 @@ const input = (props) => {
           {...props.elementConfig}
           className={InputTyle.InputElement}
           value={props.value}
-          onChange={(event) => {console.log(event.target.value)}}
+          onChange={props.changed}
         />
       );
       break;
@@ -20,7 +20,7 @@ const input = (props) => {
           {...props.elementConfig}
           className={InputTyle.InputElement}
           value={props.value}
-          onChange={(event) => {console.log(event.target.value)}}
+          onChange={props.changed}
         />
       );
       break;
@@ -30,7 +30,7 @@ const input = (props) => {
           {...props.elementConfig}
           className={InputTyle.InputElement}
           value={props.value}
-          onChange={(event) => {console.log(event.target.value)}}
+          onChange={props.changed}
         >
           {props.elementConfig.options.map((option) => (
             <option key={option.value} value={option.value}>
