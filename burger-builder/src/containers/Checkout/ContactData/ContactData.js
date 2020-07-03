@@ -3,12 +3,52 @@ import Button from "../../../components/UI/Button/Button";
 import ContactStyles from "./ContactData.module.css";
 import axiosInstance from "../../../axios-orders";
 import Spinner from "../../../components/UI/Spinner/Spinner";
+import Input from "../../../components/UI/Input/Input";
 
 class ContactData extends Component {
   state = {
-    name: "",
-    email: "",
-    address: "",
+    orderForm: {
+      name: {
+        elementType: "input",
+        elementConfig: {
+          type: "text",
+          placeholder: "your name",
+        },
+        value: "",
+      },
+      email: {
+        elementType: "email",
+        elementConfig: {
+          type: "email",
+          placeholder: "your email",
+        },
+        value: "",
+      },
+      address: {
+        elementType: "input",
+        elementConfig: {
+          type: "text",
+          placeholder: "your address",
+        },
+        value: "",
+      },
+      deliveryMethod: {
+        elementType: "select",
+        elementConfig: {
+          options: [
+            {
+              value: "fastest",
+              displayValue: "Fastest",
+            },
+            {
+              value: "cheapest",
+              displayValue: "Cheapest",
+            },
+          ],
+        },
+        value: "",
+      },
+    },
     isLoading: false,
   };
 
@@ -25,6 +65,7 @@ class ContactData extends Component {
         name: "Sid",
         email: "sid@test.com",
       },
+      deliveryMethod: "fastest",
     };
 
     axiosInstance
@@ -36,7 +77,7 @@ class ContactData extends Component {
         /*
         See how props are passed from Checkout.js to ContactData.js
         */
-       this.props.history.push("/")
+        this.props.history.push("/");
       })
       .catch((error) => {
         this.setState({
@@ -46,27 +87,24 @@ class ContactData extends Component {
   };
 
   render() {
+    const formElementArray = [];
+    for (let key in this.state.orderForm) {
+      formElementArray.push({
+        id: key,
+        config: this.state.orderForm[key],
+      });
+    }
+
     let displayContent = (
       <form>
-        <input
-          className={ContactStyles.Input}
-          type="text"
-          name="name"
-          placeholder="name"
-        />
-        <input
-          className={ContactStyles.Input}
-          type="email"
-          name="email"
-          placeholder="email"
-        />
-        <input
-          className={ContactStyles.Input}
-          type="address"
-          name="address"
-          placeholder="address"
-        />
-
+        {formElementArray.map((formElement) => (
+          <Input
+            key={formElement.id}
+            elementType={formElement.config.elementType}
+            elementConfig={formElement.config.elementConfig}
+            value={formElement.config.value}
+          />
+        ))}
         <Button btnType="Success" clicked={this.orderHandler}>
           Order
         </Button>
