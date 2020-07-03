@@ -53,19 +53,27 @@ class ContactData extends Component {
   };
 
   orderHandler = (event) => {
+    event.preventDefault(); // prevents reloading of page
+
+    const formData = {};
+    for (let formElementIdentifier in this.state.orderForm) {
+      formData[formElementIdentifier] = this.state.orderForm[
+        formElementIdentifier
+      ]["value"];
+    }
+
+    if (formData["deliveryMethod"] === "") {
+      formData["deliveryMethod"] = "fastest";
+    }
+
     this.setState({
       isLoading: true,
     });
-    event.preventDefault();
     // baseUrl defined in axios-orders.js
     const order = {
       ingredients: this.props.ingredients,
       price: this.props.totalPrice,
-      customer: {
-        name: "Sid",
-        email: "sid@test.com",
-      },
-      deliveryMethod: "fastest",
+      orderData: formData,
     };
 
     axiosInstance
@@ -87,7 +95,6 @@ class ContactData extends Component {
   };
 
   inputChangedHandler = (event, inputIdentifier) => {
-    // console.log({ ...this.state.orderForm });
     const updatedOrderForm = {
       ...this.state.orderForm,
     };
@@ -108,7 +115,7 @@ class ContactData extends Component {
     }
 
     let displayContent = (
-      <form>
+      <form onSubmit={this.orderHandler}>
         {formElementArray.map((formElement) => (
           <Input
             key={formElement.id}
@@ -118,9 +125,7 @@ class ContactData extends Component {
             changed={(event) => this.inputChangedHandler(event, formElement.id)}
           />
         ))}
-        <Button btnType="Success" clicked={this.orderHandler}>
-          Order
-        </Button>
+        <Button btnType="Success">Order</Button>
       </form>
     );
     if (this.state.isLoading) {
