@@ -3,12 +3,17 @@ import InputTyle from "./Input.module.css";
 
 const input = (props) => {
   let inputElement = null;
+  const inputClasses = [InputTyle.InputElement];
+  if (props.invalid === true) {
+    inputClasses.push(InputTyle.Invalid);
+  }
+  
   switch (props.elementType) {
     case "input":
       inputElement = (
         <input
           {...props.elementConfig}
-          className={InputTyle.InputElement}
+          className={inputClasses.join(" ")}
           value={props.value}
           onChange={props.changed}
         />
@@ -18,7 +23,7 @@ const input = (props) => {
       inputElement = (
         <input
           {...props.elementConfig}
-          className={InputTyle.InputElement}
+          className={inputClasses.join(" ")}
           value={props.value}
           onChange={props.changed}
         />
@@ -28,7 +33,7 @@ const input = (props) => {
       inputElement = (
         <select
           {...props.elementConfig}
-          className={InputTyle.InputElement}
+          className={inputClasses.join(" ")}
           value={props.value}
           onChange={props.changed}
         >
@@ -42,7 +47,12 @@ const input = (props) => {
       break;
     default:
       inputElement = (
-        <input className={InputTyle.InputElement} value={props.value} />
+        <input
+          {...props.elementConfig}
+          className={inputClasses.join(" ")}
+          value={props.value}
+          onChange={props.changed}
+        />
       );
       break;
   }

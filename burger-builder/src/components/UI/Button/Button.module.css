@@ -1,4 +1,5 @@
 .Button {
+    width: 50%;
     background-color: transparent;
     border: none;
     color: white;
@@ -21,4 +22,9 @@
 
 .Danger {
     color: #944317;
+}
+
+.Button:disabled{
+    color: lightgrey;
+    cursor: not-allowed;
 }
