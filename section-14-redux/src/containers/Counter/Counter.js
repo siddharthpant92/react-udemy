@@ -7,7 +7,7 @@ class Counter extends Component {
   render() {
     return (
       <div>
-        <CounterOutput value={this.props.ctr} />
+        <CounterOutput value={this.props.counter} />
         <CounterControl
           label="Increment"
           clicked={this.props.onIncrementCounter}
@@ -21,6 +21,19 @@ class Counter extends Component {
           label="Subtract 5"
           clicked={() => this.props.onSubtract(5)}
         />
+        <hr />
+        <button onClick={this.props.onStoreResult}>Store result</button>
+        <ul>
+          {this.props.results.map((result) => (
+            <li
+              onClick={this.props.onDeleteResult}
+              key={result.id}
+              onClick={() => this.props.onDeleteResult(result.id)}
+            >
+              {result.value}
+            </li>
+          ))}
+        </ul>
       </div>
     );
   }
@@ -30,7 +43,7 @@ class Counter extends Component {
 const mapStateToProps = (state) => {
   // 'state' refers to what is managed by redux in reducer.js, returns a property called 'ctr'
   return {
-    ctr: state.counter,
+    ...state,
   };
 };
 
@@ -41,6 +54,9 @@ const mapDispatchToProps = (dispatch) => {
     onDecrementCouner: () => dispatch({ type: "DECREMENT" }),
     onAdd: (addValue) => dispatch({ type: "ADD", value: addValue }),
     onSubtract: (subValue) => dispatch({ type: "SUBTRACT", value: subValue }),
+    onStoreResult: () => dispatch({ type: "STORE_RESULT" }),
+    onDeleteResult: (idValue) =>
+      dispatch({ type: "DELETE_RESULT", idValue: idValue }),
   };
 };
 
