@@ -8,7 +8,9 @@ class Persons extends Component {
   render() {
     return (
       <div>
-        <AddPerson personAdded={this.props.personAddedHandler} />
+        <AddPerson
+          personAdded={(name, age) => this.props.personAddedHandler(name, age)}
+        />
         {this.props.persons.map((person) => (
           <Person
             key={person.id}
@@ -30,13 +32,13 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    personAddedHandler: () =>
+    personAddedHandler: (name, age) =>
       dispatch({
         type: ACTION_TYPES.ADD_PERSON,
         payload: {
           id: Math.random(), // not really unique but good enough here!
-          name: "Max",
-          age: Math.floor(Math.random() * 40),
+          name: name,
+          age: age,
         },
       }),
     personDeletedHandler: (personId) =>
