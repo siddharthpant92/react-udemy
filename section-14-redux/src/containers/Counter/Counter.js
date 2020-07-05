@@ -23,7 +23,7 @@ class Counter extends Component {
           clicked={() => this.props.onSubtract(5)}
         />
         <hr />
-        <button onClick={this.props.onStoreResult}>Store result</button>
+        <button onClick={() => this.props.onStoreResult(this.props.counter)}>Store result</button>
         <ul>
           {this.props.results.map((result) => (
             <li
@@ -42,10 +42,11 @@ class Counter extends Component {
 
 // Configuration to only get the state that this container needs
 const mapStateToProps = (state) => {
-  // 'state' refers to what is managed by redux in reducer.js, returns a property called 'ctr'
+  // 'state' refers to what is managed by redux in "reducers/counter.js" and "reducers/results.js". See index.js
   return {
-    ...state,
-  };
+    counter: state.ctr.counter,
+    results: state.res.results
+  }
 };
 
 // Configuration for the actions that this container needs to be dispatch
@@ -56,7 +57,11 @@ const mapDispatchToProps = (dispatch) => {
     onAdd: (addValue) => dispatch({ type: ACTION_TYPES.ADD, value: addValue }),
     onSubtract: (subValue) =>
       dispatch({ type: ACTION_TYPES.SUBTRACT, value: subValue }),
-    onStoreResult: () => dispatch({ type: ACTION_TYPES.STORE_RESULT }),
+    onStoreResult: (counterValue) =>
+      dispatch({
+        type: ACTION_TYPES.STORE_RESULT,
+        counterValue: counterValue,
+      }),
     onDeleteResult: (idValue) =>
       dispatch({ type: ACTION_TYPES.DELETE_RESULT, idValue: idValue }),
   };
