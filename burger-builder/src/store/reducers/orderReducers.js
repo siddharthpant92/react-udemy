@@ -32,6 +32,15 @@ export default (state = initialState, action) => {
     case actionTypes.PURCHASE_INIT:
       return { ...state, purchased: false };
 
+    case actionTypes.FETCH_EXISTING_ORDERS_START:
+      return { ...state, orderLoading: true };
+
+    case actionTypes.FETCH_EXISTING_ORDERS_SUCCESS:
+      return { ...state, orders: action.orders, orderLoading: false };
+
+    case actionTypes.FETCH_EXISTING_ORDERS_FAIL:
+      return { ...state, orderLoading: true };
+
     default:
       return state;
   }
