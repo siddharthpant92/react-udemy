@@ -7,13 +7,13 @@ import OrderSummary from "../../components/Burger/OrderSummary/OrderSummary";
 import Spinner from "../../components/UI/Spinner/Spinner";
 import ErrorModal from "../../components/UI/ErrorModal/ErrorModal";
 import { connect } from "react-redux";
-import * as burgerBuilderActions from "../../store/actions/indexActions";
+import * as actions from "../../store/actions/indexActions";
 
 class BurgerBuilder extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      orderConfirmed: false
+      orderConfirmed: false,
     };
   }
 
@@ -36,6 +36,7 @@ class BurgerBuilder extends Component {
   };
 
   continuePurchase = () => {
+    this.props.onInitPurchase();
     this.setState({ orderConfirmed: true });
   };
 
@@ -122,10 +123,11 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => ({
   addIngredientHandler: (ingredientName) =>
-    dispatch(burgerBuilderActions.addIngredient(ingredientName)),
+    dispatch(actions.addIngredient(ingredientName)),
   removeIngredientHandler: (ingredientName) =>
-    dispatch(burgerBuilderActions.removeIngredient(ingredientName)),
-  onInitIngredients: () => dispatch(burgerBuilderActions.initIngredients()),
+    dispatch(actions.removeIngredient(ingredientName)),
+  onInitIngredients: () => dispatch(actions.initIngredients()),
+  onInitPurchase: () => dispatch(actions.purchaseInit()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(BurgerBuilder);

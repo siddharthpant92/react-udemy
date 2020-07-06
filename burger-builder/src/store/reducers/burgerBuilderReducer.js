@@ -40,6 +40,7 @@ export default (state = initialState, action) => {
         ...state,
         ingredients: action.ingredients,
         firebaseRequestError: false,
+        totalPrice: 9,
       };
 
     case actionTypes.FETCH_INGREDIENTS_FAILED:
