@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import CounterControl from "../../components/CounterControl/CounterControl";
 import CounterOutput from "../../components/CounterOutput/CounterOutput";
-import ACTION_TYPES from "../../store/actions";
+import * as actionCreators from "../../store/actions/indexActions";
 
 class Counter extends Component {
   render() {
@@ -23,7 +23,9 @@ class Counter extends Component {
           clicked={() => this.props.onSubtract(5)}
         />
         <hr />
-        <button onClick={() => this.props.onStoreResult(this.props.counter)}>Store result</button>
+        <button onClick={() => this.props.onStoreResult(this.props.counter)}>
+          Store result
+        </button>
         <ul>
           {this.props.results.map((result) => (
             <li
@@ -41,28 +43,23 @@ class Counter extends Component {
 
 // Configuration to only get the state that this container needs
 const mapStateToProps = (state) => {
-  // 'state' refers to what is managed by redux in "reducers/counter.js" and "reducers/results.js". See index.js
+  // 'state' refers to what is managed by redux in the files in "reducers/" and "reducers/results.js". See index.js
   return {
     counter: state.ctr.counter,
-    results: state.res.results
-  }
+    results: state.res.results,
+  };
 };
 
 // Configuration for the actions that this container needs to be dispatch
 const mapDispatchToProps = (dispatch) => {
   return {
-    onIncrementCounter: () => dispatch({ type: ACTION_TYPES.INCREMENT }),
-    onDecrementCouner: () => dispatch({ type: ACTION_TYPES.DECREMENT }),
-    onAdd: (addValue) => dispatch({ type: ACTION_TYPES.ADD, value: addValue }),
-    onSubtract: (subValue) =>
-      dispatch({ type: ACTION_TYPES.SUBTRACT, value: subValue }),
+    onIncrementCounter: () => dispatch(actionCreators.increment()),
+    onDecrementCouner: () => dispatch(actionCreators.decrement()),
+    onAdd: (addValue) => dispatch(actionCreators.add(addValue)),
+    onSubtract: (subValue) => dispatch(actionCreators.subtract(subValue)),
     onStoreResult: (counterValue) =>
-      dispatch({
-        type: ACTION_TYPES.STORE_RESULT,
-        counterValue: counterValue,
-      }),
-    onDeleteResult: (idValue) =>
-      dispatch({ type: ACTION_TYPES.DELETE_RESULT, idValue: idValue }),
+      dispatch(actionCreators.storeResult(counterValue)),
+    onDeleteResult: (idValue) => dispatch(actionCreators.deleteResult(idValue)),
   };
 };
 
