@@ -116,7 +116,7 @@ class BurgerBuilder extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    ...state,
+    ...state.burgerBuilder,
   };
 };
 

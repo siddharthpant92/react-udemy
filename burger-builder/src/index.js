@@ -4,16 +4,22 @@ import "./index.module.css";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import { Provider } from "react-redux";
-import { createStore, applyMiddleware, compose } from "redux";
-import burgerBuilderReducer from "./store/reducers/burgerBuilderReducer";
+import { createStore, applyMiddleware, compose, combineReducers } from "redux";
 import thunk from "redux-thunk";
+import burgerBuilderReducer from "./store/reducers/burgerBuilderReducer";
+import orderReducer from "./store/reducers/orderReducers";
 
 // window param neeed for redux dev tool
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
+const rootReducer = combineReducers({
+  burgerBuilder: burgerBuilderReducer,
+  order: orderReducer,
+});
+
 // applying middleware for async code
 const store = createStore(
-  burgerBuilderReducer,
+  rootReducer,
   composeEnhancers(applyMiddleware(thunk))
 );
 

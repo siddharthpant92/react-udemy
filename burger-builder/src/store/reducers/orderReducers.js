@@ -2,7 +2,7 @@ import * as actionTypes from "../actions/actionTypes";
 
 const initialState = {
   orders: [],
-  orderLoading: true,
+  orderLoading: false,
 };
 
 export default (state = initialState, action) => {

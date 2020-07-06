@@ -67,7 +67,6 @@ class ContactData extends Component {
         },
       },
     },
-    // isLoading: false,
     isFormValid: false,
   };
 
@@ -83,10 +82,11 @@ class ContactData extends Component {
 
     // baseUrl defined in axios-orders.js
     const order = {
-      ingredients: this.props.ingredients,
-      price: this.props.totalPrice,
+      ingredients: this.props.burgerBuilder.ingredients,
+      price: this.props.burgerBuilder.totalPrice,
       orderData: formData,
     };
+    console.log("contectdata orderHandler order: ", order)
 
     this.props.onOrderBurger(order);
   };
@@ -148,7 +148,7 @@ class ContactData extends Component {
         </Button>
       </form>
     );
-    if (this.props.orderLoading) {
+    if (this.props.order.orderLoading) {
       displayContent = <Spinner />;
     }
 
@@ -163,7 +163,8 @@ class ContactData extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    ...state,
+    burgerBuilder: { ...state.burgerBuilder },
+    order: { ...state.order },
   };
 };
 
