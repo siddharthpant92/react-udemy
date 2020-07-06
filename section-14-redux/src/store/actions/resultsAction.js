@@ -6,8 +6,9 @@ export const saveResult = (counterValue) => {
 };
 
 export const storeResult = (counterValue) => {
-  return (dispatch) => {
+  return (dispatch, getState) => {
     setTimeout(() => {
+      console.log("resultsAction storeResult getState: ", getState())
       dispatch(saveResult(counterValue));
     }, 3000);
   };
