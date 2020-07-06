@@ -1,10 +1,11 @@
 import React, { Component } from "react";
 import Button from "../../../components/UI/Button/Button";
 import ContactStyles from "./ContactData.module.css";
-import axiosInstance from "../../../axios-orders";
 import Spinner from "../../../components/UI/Spinner/Spinner";
 import Input from "../../../components/UI/Input/Input";
 import { connect } from "react-redux";
+
+import * as orderActions from "../../../store/actions/indexActions";
 
 class ContactData extends Component {
   state = {
@@ -66,7 +67,7 @@ class ContactData extends Component {
         },
       },
     },
-    isLoading: false,
+    // isLoading: false,
     isFormValid: false,
   };
 
@@ -80,9 +81,6 @@ class ContactData extends Component {
       ]["value"];
     }
 
-    this.setState({
-      isLoading: true,
-    });
     // baseUrl defined in axios-orders.js
     const order = {
       ingredients: this.props.ingredients,
@@ -90,22 +88,7 @@ class ContactData extends Component {
       orderData: formData,
     };
 
-    axiosInstance
-      .post("/orders.json", order)
-      .then((response) => {
-        this.setState({
-          isLoading: false,
-        });
-        /*
-        See how props are passed from Checkout.js to ContactData.js
-        */
-        this.props.history.push("/");
-      })
-      .catch((error) => {
-        this.setState({
-          isLoading: false,
-        });
-      });
+    this.props.onOrderBurger(order);
   };
 
   inputChangedHandler = (event, inputIdentifier) => {
@@ -165,7 +148,7 @@ class ContactData extends Component {
         </Button>
       </form>
     );
-    if (this.state.isLoading) {
+    if (this.props.orderLoading) {
       displayContent = <Spinner />;
     }
 
@@ -178,10 +161,15 @@ class ContactData extends Component {
   }
 }
 
-
 const mapStateToProps = (state) => {
   return {
     ...state,
   };
 };
-export default connect(mapStateToProps)(ContactData);
+
+const mapDispatchToProps = (dispatch) => ({
+  onOrderBurger: (orderData) =>
+    dispatch(orderActions.purchaseBurger(orderData)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ContactData);
