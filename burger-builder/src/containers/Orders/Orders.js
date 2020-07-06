@@ -5,10 +5,6 @@ import { connect } from "react-redux";
 import Spinner from "../../components/UI/Spinner/Spinner";
 
 class Orders extends Component {
-  // state = {
-  //   orders: [],
-  //   loading: true,
-  // };
 
   componentWillMount() {
     this.props.onFetchOrders();
@@ -36,7 +32,6 @@ class Orders extends Component {
 }
 
 const mapStateToProps = (state) => {
-  console.log(state.order);
   return {
     ...state.order,
   };

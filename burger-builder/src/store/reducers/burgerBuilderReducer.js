@@ -13,35 +13,49 @@ const initialState = {
   firebaseRequestError: false,
 };
 
+function addIngredient(state, action) {
+  const updatedIngredients = { ...state.ingredients };
+  updatedIngredients[action.ingredientName] =
+    state.ingredients[action.ingredientName] + 1;
+
+  return {
+    ...state,
+    ingredients: updatedIngredients,
+    totalPrice: state.totalPrice + INGREDIENT_PRICES[action.ingredientName],
+  };
+}
+
+function removeIngredient(state, action) {
+  const updatedIngredients = { ...state.ingredients };
+  updatedIngredients[action.ingredientName] =
+    state.ingredients[action.ingredientName] - 1;
+
+  return {
+    ...state,
+    ingredients: updatedIngredients,
+    totalPrice: state.totalPrice + INGREDIENT_PRICES[action.ingredientName],
+  };
+}
+
+function setIngredient(state, action) {
+  return {
+    ...state,
+    ingredients: action.ingredients,
+    firebaseRequestError: false,
+    totalPrice: 9,
+  };
+}
+
 export default (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.ADD_INGREDEIENT:
-      return {
-        ...state,
-        ingredients: {
-          ...state.ingredients,
-          [action.ingredientName]: state.ingredients[action.ingredientName] + 1,
-        },
-        totalPrice: state.totalPrice + INGREDIENT_PRICES[action.ingredientName],
-      };
+      return addIngredient(state, action);
 
     case actionTypes.REMOVE_INGREDEIENT:
-      return {
-        ...state,
-        ingredients: {
-          ...state.ingredients,
-          [action.ingredientName]: state.ingredients[action.ingredientName] - 1,
-        },
-        totalPrice: state.totalPrice - INGREDIENT_PRICES[action.ingredientName],
-      };
+      return removeIngredient(state, action);
 
     case actionTypes.SET_INGREDIENTS:
-      return {
-        ...state,
-        ingredients: action.ingredients,
-        firebaseRequestError: false,
-        totalPrice: 9,
-      };
+      return setIngredient(state, action);
 
     case actionTypes.FETCH_INGREDIENTS_FAILED:
       return {
