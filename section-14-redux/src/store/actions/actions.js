@@ -21,8 +21,16 @@ export const subtract = (subValue) => {
   return { type: SUBTRACT, value: subValue };
 };
 
-export const storeResult = (counterValue) => {
+export const saveResult = (counterValue) => {
   return { type: STORE_RESULT, counterValue: counterValue };
+};
+
+export const storeResult = (counterValue) => {
+  return (dispatch) => {
+    setTimeout(() => {
+      dispatch(saveResult(counterValue));
+    }, 3000);
+  };
 };
 
 export const deleteResult = (idValue) => {
