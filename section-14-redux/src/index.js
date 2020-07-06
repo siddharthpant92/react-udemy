@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 import registerServiceWorker from "./registerServiceWorker";
-import { createStore, combineReducers, applyMiddleware } from "redux";
+import { createStore, combineReducers, applyMiddleware, compose } from "redux";
 import counterReducer from "./store/reducers/counter";
 import resultsReducer from "./store/reducers/results";
 import { Provider } from "react-redux";
@@ -26,7 +26,13 @@ const logger = (store) => {
   };
 };
 
-const store = createStore(rootReducer, applyMiddleware(logger));
+// Needed for redux chrome extension. See Section 16 lecture 286: https://github.com/zalmoxisus/redux-devtools-extension#12-advanced-store-setup
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+
+const store = createStore(
+  rootReducer,
+  composeEnhancers(applyMiddleware(logger))
+);
 
 ReactDOM.render(
   <Provider store={store}>
