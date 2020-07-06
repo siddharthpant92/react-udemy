@@ -4,40 +4,24 @@ import Burger from "../../components/Burger/Burger";
 import BuildControls from "../../components/Burger/BuildControls/BuildControls";
 import Modal from "../../components/UI/Modal/Modal";
 import OrderSummary from "../../components/Burger/OrderSummary/OrderSummary";
-import axiosInstance from "../../axios-orders";
 import Spinner from "../../components/UI/Spinner/Spinner";
 import ErrorModal from "../../components/UI/ErrorModal/ErrorModal";
 import { connect } from "react-redux";
-import * as actionTypes from "../../store/actions";
+import * as actions from "../../store/actions/indexActions";
 
 class BurgerBuilder extends Component {
   constructor(props) {
     super(props);
     this.state = {
       orderConfirmed: false,
-      loading: false,
-      firebaseRequestError: false,
     };
   }
 
-  // componentDidMount() {
-  //   // Valid lifecycle method for side affects like making an api call
-  //   // Fetching the ingredients for a base burger for initial state
-  //   axiosInstance
-  //     .get("/ingredients.json")
-  //     .then((response) => {
-  //       this.setState({ ingredients: response.data });
-  //       this.checkPurchesedState();
-  //     })
-  //     .catch((error) => {
-  //       console.log("componentDidMount ERROR: ", error);
-  //       this.setState({
-  //         loading: false,
-  //         orderConfirmed: false,
-  //         firebaseRequestError: true,
-  //       });
-  //     });
-  // }
+  componentDidMount() {
+    // Valid lifecycle method for side affects like making an api call
+    // Fetching the ingredients for a base burger for initial state
+    this.props.onInitIngredients();
+  }
 
   checkPurchesedState = () => {
     const ingredientsList = this.props.ingredients;
@@ -52,6 +36,7 @@ class BurgerBuilder extends Component {
   };
 
   continuePurchase = () => {
+    this.props.onInitPurchase();
     this.setState({ orderConfirmed: true });
   };
 
@@ -73,10 +58,6 @@ class BurgerBuilder extends Component {
     }
 
     let orderSummary = null;
-    if (this.state.loading) {
-      orderSummary = <Spinner />;
-    }
-
     let burger = null;
 
     if (!this.props.ingredients) {
@@ -115,9 +96,9 @@ class BurgerBuilder extends Component {
 
     return (
       <Aux>
-        {this.state.firebaseRequestError ? (
+        {this.props.firebaseRequestError ? (
           <ErrorModal
-            show={this.state.firebaseRequestError}
+            show={this.props.firebaseRequestError}
             modalClosed={this.purchaseCancelHandler}
           />
         ) : (
@@ -136,21 +117,17 @@ class BurgerBuilder extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    ...state,
+    ...state.burgerBuilder,
   };
 };
 
 const mapDispatchToProps = (dispatch) => ({
   addIngredientHandler: (ingredientName) =>
-    dispatch({
-      type: actionTypes.ADD_INGREDEIENT,
-      ingredientName: ingredientName,
-    }),
+    dispatch(actions.addIngredient(ingredientName)),
   removeIngredientHandler: (ingredientName) =>
-    dispatch({
-      type: actionTypes.REMOVE_INGREDEIENT,
-      ingredientName: ingredientName,
-    }),
+    dispatch(actions.removeIngredient(ingredientName)),
+  onInitIngredients: () => dispatch(actions.initIngredients()),
+  onInitPurchase: () => dispatch(actions.purchaseInit()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(BurgerBuilder);
