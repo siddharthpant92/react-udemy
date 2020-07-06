@@ -4,7 +4,6 @@ import Burger from "../../components/Burger/Burger";
 import BuildControls from "../../components/Burger/BuildControls/BuildControls";
 import Modal from "../../components/UI/Modal/Modal";
 import OrderSummary from "../../components/Burger/OrderSummary/OrderSummary";
-import axiosInstance from "../../axios-orders";
 import Spinner from "../../components/UI/Spinner/Spinner";
 import ErrorModal from "../../components/UI/ErrorModal/ErrorModal";
 import { connect } from "react-redux";
@@ -14,30 +13,15 @@ class BurgerBuilder extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      orderConfirmed: false,
-      loading: false,
-      firebaseRequestError: false,
+      orderConfirmed: false
     };
   }
 
-  // componentDidMount() {
-  //   // Valid lifecycle method for side affects like making an api call
-  //   // Fetching the ingredients for a base burger for initial state
-  //   axiosInstance
-  //     .get("/ingredients.json")
-  //     .then((response) => {
-  //       this.setState({ ingredients: response.data });
-  //       this.checkPurchesedState();
-  //     })
-  //     .catch((error) => {
-  //       console.log("componentDidMount ERROR: ", error);
-  //       this.setState({
-  //         loading: false,
-  //         orderConfirmed: false,
-  //         firebaseRequestError: true,
-  //       });
-  //     });
-  // }
+  componentDidMount() {
+    // Valid lifecycle method for side affects like making an api call
+    // Fetching the ingredients for a base burger for initial state
+    this.props.onInitIngredients();
+  }
 
   checkPurchesedState = () => {
     const ingredientsList = this.props.ingredients;
@@ -73,10 +57,6 @@ class BurgerBuilder extends Component {
     }
 
     let orderSummary = null;
-    if (this.state.loading) {
-      orderSummary = <Spinner />;
-    }
-
     let burger = null;
 
     if (!this.props.ingredients) {
@@ -115,9 +95,9 @@ class BurgerBuilder extends Component {
 
     return (
       <Aux>
-        {this.state.firebaseRequestError ? (
+        {this.props.firebaseRequestError ? (
           <ErrorModal
-            show={this.state.firebaseRequestError}
+            show={this.props.firebaseRequestError}
             modalClosed={this.purchaseCancelHandler}
           />
         ) : (
@@ -145,6 +125,7 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(burgerBuilderActions.addIngredient(ingredientName)),
   removeIngredientHandler: (ingredientName) =>
     dispatch(burgerBuilderActions.removeIngredient(ingredientName)),
+  onInitIngredients: () => dispatch(burgerBuilderActions.initIngredients()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(BurgerBuilder);
