@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import CounterControl from "../../components/CounterControl/CounterControl";
 import CounterOutput from "../../components/CounterOutput/CounterOutput";
-import * as actionCreators from "../../store/actions/actions";
+import * as actionCreators from "../../store/actions/indexActions";
 
 class Counter extends Component {
   render() {
@@ -43,7 +43,7 @@ class Counter extends Component {
 
 // Configuration to only get the state that this container needs
 const mapStateToProps = (state) => {
-  // 'state' refers to what is managed by redux in "reducers/counter.js" and "reducers/results.js". See index.js
+  // 'state' refers to what is managed by redux in the files in "reducers/" and "reducers/results.js". See index.js
   return {
     counter: state.ctr.counter,
     results: state.res.results,
