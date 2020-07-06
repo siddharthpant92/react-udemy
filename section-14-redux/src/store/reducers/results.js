@@ -1,4 +1,4 @@
-import ACTION_TYPES from "../actions";
+import * as actionTypes from "../actions/actions";
 
 const initialState = {
   results: [],
@@ -6,7 +6,7 @@ const initialState = {
 
 const resultsReducer = (state = initialState, action) => {
   switch (action.type) {
-    case ACTION_TYPES.STORE_RESULT:
+    case actionTypes.STORE_RESULT:
       // concat returns a new array instead of updating the exsisting one
       return {
         ...state,
@@ -15,7 +15,7 @@ const resultsReducer = (state = initialState, action) => {
           value: action.counterValue,
         }),
       };
-    case ACTION_TYPES.DELETE_RESULT:
+    case actionTypes.DELETE_RESULT:
       const updatedArray = state.results.filter(
         (result) => result.id !== action.idValue
       );

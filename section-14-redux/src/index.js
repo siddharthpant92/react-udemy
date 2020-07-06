@@ -17,10 +17,10 @@ const rootReducer = combineReducers({
 const logger = (store) => {
   return (next) => {
     return (action) => {
-      console.log("middleware action: ", action);
-      console.log("middleware current state: ", store.getState());
+      // console.log("middleware action: ", action);
+      // console.log("middleware current state: ", store.getState());
       const result = next(action);
-      console.log("middleware next state: ", store.getState());
+      // console.log("middleware next state: ", store.getState());
       return result;
     };
   };
