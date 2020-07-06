@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 import registerServiceWorker from "./registerServiceWorker";
-import { createStore, combineReducers } from "redux";
+import { createStore, combineReducers, applyMiddleware } from "redux";
 import counterReducer from "./store/reducers/counter";
 import resultsReducer from "./store/reducers/results";
 import { Provider } from "react-redux";
@@ -14,7 +14,19 @@ const rootReducer = combineReducers({
   res: resultsReducer,
 });
 
-const store = createStore(rootReducer);
+const logger = (store) => {
+  return (next) => {
+    return (action) => {
+      console.log("middleware action: ", action);
+      console.log("middleware current state: ", store.getState());
+      const result = next(action);
+      console.log("middleware next state: ", store.getState());
+      return result;
+    };
+  };
+};
+
+const store = createStore(rootReducer, applyMiddleware(logger));
 
 ReactDOM.render(
   <Provider store={store}>
