@@ -1,4 +1,5 @@
 import * as actionTypes from "../actions/actionTypes";
+import { updateObject } from "../utility";
 
 const initialState = {
   results: [],
@@ -19,10 +20,9 @@ const resultsReducer = (state = initialState, action) => {
       const updatedArray = state.results.filter(
         (result) => result.id !== action.idValue
       );
-      return {
-        ...state,
+      return updateObject(state, {
         results: updatedArray,
-      };
+      });
 
     default:
       return state;
