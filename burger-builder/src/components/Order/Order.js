@@ -9,9 +9,18 @@ const order = (props) => {
       amount: props.ingredients[ingredientName],
     });
   }
-  console.log(ingredients);
+
   const ingredientDisplayContent = ingredients.map((ig) => (
-    <span key={ig.name} style={{ textTransform: "capitalize", display:"inline-block", margin: "0 8px", border: '1px solid grey', padding: "5px" }}>
+    <span
+      key={ig.name}
+      style={{
+        textTransform: "capitalize",
+        display: "inline-block",
+        margin: "0 8px",
+        border: "1px solid grey",
+        padding: "5px",
+      }}
+    >
       {ig.name}: {ig.amount}
     </span>
   ));
