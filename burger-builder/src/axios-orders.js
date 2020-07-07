@@ -1,7 +1,9 @@
 import axios from "axios";
+require("dotenv").config();
 
 const axiosInstance = axios.create({
-  baseURL: "https://react-burger-builder-5a27e.firebaseio.com/",
+  baseURL: process.env.REACT_APP_FIREBASE_URL,
 });
+
 
 export default axiosInstance;

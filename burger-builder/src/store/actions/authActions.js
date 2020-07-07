@@ -23,6 +23,22 @@ export const authFail = (error) => {
   };
 };
 
+export const logout = () => {
+  return {
+    type: actionTypes.AUTH_LOGOUT,
+  };
+};
+
+// The access token expires after 60 min. If we refresh the page, we lose the state anyway.
+// Ex of this is for when if we leave the page for over an hour without doing anything
+export const checkAuthTimeout = (expirationTime) => {
+  return (dispatch) => {
+    setTimeout(() => {
+      dispatch(logout());
+    }, expirationTime * 1000); //converting 3600sec into ms
+  };
+};
+
 export const auth = (email, password, isSignup) => {
   return (dispatch) => {
     dispatch(authStart());
@@ -45,8 +61,8 @@ export const auth = (email, password, isSignup) => {
     axios
       .post(url, authData)
       .then((response) => {
-        console.log(response.data);
         dispatch(authSuccess(response.data.idToken, response.data.localId));
+        dispatch(checkAuthTimeout(response.data.expiresIn));
       })
       .catch((error) => {
         console.log("authActions auth error.resopnse: ", error.response);
