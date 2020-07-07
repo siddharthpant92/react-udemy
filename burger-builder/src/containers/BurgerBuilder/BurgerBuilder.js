@@ -24,7 +24,7 @@ class BurgerBuilder extends Component {
   }
 
   checkPurchesedState = () => {
-    const ingredientsList = this.props.ingredients;
+    const ingredientsList = this.props.burgerBuilder.ingredients;
     const sum = Object.keys(ingredientsList)
       .map((ingredientName) => {
         return ingredientsList[ingredientName];
@@ -48,10 +48,15 @@ class BurgerBuilder extends Component {
     this.props.history.push("/checkout");
   };
 
+  signInToOrderClickedHandler = () => {
+    this.props.onSetRedirectPath("/checkout")
+    this.props.history.push("/auth");
+  };
+
   render() {
     // Finding out for which ingredients the 'Less' button should be disabled
     const disabledInfo = {
-      ...this.props.ingredients,
+      ...this.props.burgerBuilder.ingredients,
     };
     for (let key in disabledInfo) {
       disabledInfo[key] = disabledInfo[key] <= 0;
@@ -60,14 +65,14 @@ class BurgerBuilder extends Component {
     let orderSummary = null;
     let burger = null;
 
-    if (!this.props.ingredients) {
+    if (!this.props.burgerBuilder.ingredients) {
       // Initially before the GET request to fetch ingredients hasn't completed, display the spinner
       burger = <Spinner />;
     } else {
       // Create the burger with the base ingredients fetched from firebase
       burger = (
         <Aux>
-          <Burger ingredients={this.props.ingredients} />;
+          <Burger ingredients={this.props.burgerBuilder.ingredients} />;
           <BuildControls
             addIngredient={
               (ingredientType) =>
@@ -77,28 +82,30 @@ class BurgerBuilder extends Component {
               this.props.removeIngredientHandler(ingredientType)
             }
             disabled={disabledInfo}
-            price={this.props.totalPrice}
+            price={this.props.burgerBuilder.totalPrice}
             purchasable={this.checkPurchesedState()}
             continuePurchase={this.continuePurchase}
+            signInToOrderClicked={this.signInToOrderClickedHandler}
+            isAuth={this.props.auth.token !== null}
           />
         </Aux>
       );
       // Creating thr OrderSummary component after we get the ingredients list
       orderSummary = (
         <OrderSummary
-          ingredients={this.props.ingredients}
+          ingredients={this.props.burgerBuilder.ingredients}
           purchaseCancelled={this.purchaseCancelHandler}
           purchaseConfirmed={this.purchaseConfirmHandler}
-          totalPrice={this.props.totalPrice}
+          totalPrice={this.props.burgerBuilder.totalPrice}
         />
       );
     }
 
     return (
       <Aux>
-        {this.props.firebaseRequestError ? (
+        {this.props.burgerBuilder.firebaseRequestError ? (
           <ErrorModal
-            show={this.props.firebaseRequestError}
+            show={this.props.burgerBuilder.firebaseRequestError}
             modalClosed={this.purchaseCancelHandler}
           />
         ) : (
@@ -117,7 +124,8 @@ class BurgerBuilder extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    ...state.burgerBuilder,
+    burgerBuilder: { ...state.burgerBuilder },
+    auth: { ...state.auth },
   };
 };
 
@@ -128,6 +136,7 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(actions.removeIngredient(ingredientName)),
   onInitIngredients: () => dispatch(actions.initIngredients()),
   onInitPurchase: () => dispatch(actions.purchaseInit()),
+  onSetRedirectPath: (path) => dispatch(actions.setAuthRedirectPath(path)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(BurgerBuilder);

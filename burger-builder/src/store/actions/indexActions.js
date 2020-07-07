@@ -10,3 +10,5 @@ export {
   purchaseInit,
   fetchOrders,
 } from "./orderActions";
+
+export { auth, logout, setAuthRedirectPath } from "./authActions";

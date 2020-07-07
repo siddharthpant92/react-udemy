@@ -11,6 +11,7 @@ const initialState = {
   ingredients: null,
   totalPrice: 9, //hard coded based on the ingredients stored in firebase
   firebaseRequestError: false,
+  buildingBurger: false,
 };
 
 function addIngredient(state, action) {
@@ -22,6 +23,7 @@ function addIngredient(state, action) {
     ...state,
     ingredients: updatedIngredients,
     totalPrice: state.totalPrice + INGREDIENT_PRICES[action.ingredientName],
+    buildingBurger: true,
   };
 }
 
@@ -34,6 +36,7 @@ function removeIngredient(state, action) {
     ...state,
     ingredients: updatedIngredients,
     totalPrice: state.totalPrice + INGREDIENT_PRICES[action.ingredientName],
+    buildingBurger: true,
   };
 }
 
@@ -43,6 +46,7 @@ function setIngredient(state, action) {
     ingredients: action.ingredients,
     firebaseRequestError: false,
     totalPrice: 9,
+    buildingBurger: false,
   };
 }
 

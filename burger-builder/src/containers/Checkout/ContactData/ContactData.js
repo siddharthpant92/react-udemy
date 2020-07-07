@@ -86,7 +86,7 @@ class ContactData extends Component {
       price: this.props.burgerBuilder.totalPrice,
       orderData: formData,
     };
-    console.log("contectdata orderHandler order: ", order)
+    console.log("contectdata orderHandler order: ", order);
 
     this.props.onOrderBurger(order);
   };
@@ -154,6 +154,11 @@ class ContactData extends Component {
 
     return (
       <div className={ContactStyles.Contact}>
+        <p>
+          Note: no real custom validation checking for input fields. Only
+          placeholder validation done. See code. Don't care about this part.
+          Focusing more on react stuff
+        </p>
         <h4>Enter your contact details</h4>
         {displayContent}
       </div>
