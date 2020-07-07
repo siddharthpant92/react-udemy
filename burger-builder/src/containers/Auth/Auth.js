@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Button from "../../components/UI/Button/Button";
 import Input from "../../components/UI/Input/Input";
+import Spinner from "../../components/UI/Spinner/Spinner";
 import AuthStyles from "./Auth.module.css";
 import * as actions from "../../store/actions/indexActions";
 import { connect } from "react-redux";
@@ -97,7 +98,7 @@ class Auth extends Component {
       });
     }
 
-    const form = formElementArray.map((formElement) => (
+    let form = formElementArray.map((formElement) => (
       <Input
         key={formElement.id}
         elementType={formElement.config.elementType}
@@ -108,8 +109,18 @@ class Auth extends Component {
       />
     ));
 
+    if (this.props.auth.loading) {
+      form = <Spinner />;
+    }
+
+    let errorMessage = null;
+    if (this.props.auth.error) {
+      errorMessage = <p>{this.props.auth.error.message}</p>;
+    }
+
     return (
       <div className={AuthStyles.Auth}>
+        {errorMessage}
         <p>
           Note: no real custom validation checking for input fields. Only
           placeholder validation done. See code. Don't care about this part.
@@ -127,12 +138,13 @@ class Auth extends Component {
   }
 }
 
-// const mapStateToProps = (state) => ({
+const mapStateToProps = (state) => ({
+  auth: { ...state.auth },
+});
 
-// });
 const mapDispatchToProps = (dispatch) => ({
   onAuth: (email, password, isSignup) =>
     dispatch(actions.auth(email, password, isSignup)),
 });
 
-export default connect(null, mapDispatchToProps)(Auth);
+export default connect(mapStateToProps, mapDispatchToProps)(Auth);
