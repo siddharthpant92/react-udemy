@@ -22,7 +22,6 @@ const controls = [
 ];
 
 const buildControls = (props) => {
-  console.log(props)
   return (
     <div className={BuildControlsStyle.BuildControls}>
       <p>
@@ -50,7 +49,7 @@ const buildControls = (props) => {
           className={BuildControlsStyle.OrderButton}
           onClick={props.signInToOrderClicked}
         >
-          Sign in to continue
+          Sign in to place order
         </button>
       )}
     </div>

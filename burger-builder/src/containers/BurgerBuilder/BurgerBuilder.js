@@ -49,6 +49,7 @@ class BurgerBuilder extends Component {
   };
 
   signInToOrderClickedHandler = () => {
+    this.props.onSetRedirectPath("/checkout")
     this.props.history.push("/auth");
   };
 
@@ -135,6 +136,7 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(actions.removeIngredient(ingredientName)),
   onInitIngredients: () => dispatch(actions.initIngredients()),
   onInitPurchase: () => dispatch(actions.purchaseInit()),
+  onSetRedirectPath: (path) => dispatch(actions.setAuthRedirectPath(path)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(BurgerBuilder);

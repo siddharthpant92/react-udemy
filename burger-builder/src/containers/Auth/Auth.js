@@ -121,7 +121,7 @@ class Auth extends Component {
 
     let authRedirect = null;
     if (this.props.auth.token) {
-      authRedirect = <Redirect to="/" />;
+      authRedirect = <Redirect to={this.props.auth.authRedirectPath} />;
     }
 
     return (
@@ -147,6 +147,7 @@ class Auth extends Component {
 
 const mapStateToProps = (state) => ({
   auth: { ...state.auth },
+  burgerBuilder: { ...state.burgerBuilder },
 });
 
 const mapDispatchToProps = (dispatch) => ({
