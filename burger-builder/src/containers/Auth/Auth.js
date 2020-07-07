@@ -5,6 +5,7 @@ import Spinner from "../../components/UI/Spinner/Spinner";
 import AuthStyles from "./Auth.module.css";
 import * as actions from "../../store/actions/indexActions";
 import { connect } from "react-redux";
+import { Redirect } from "react-router-dom";
 
 class Auth extends Component {
   state = {
@@ -118,8 +119,14 @@ class Auth extends Component {
       errorMessage = <p>{this.props.auth.error.message}</p>;
     }
 
+    let authRedirect = null;
+    if (this.props.auth.token) {
+      authRedirect = <Redirect to="/" />;
+    }
+
     return (
       <div className={AuthStyles.Auth}>
+        {authRedirect}
         {errorMessage}
         <p>
           Note: no real custom validation checking for input fields. Only

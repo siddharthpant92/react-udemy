@@ -5,7 +5,6 @@ import { connect } from "react-redux";
 import Spinner from "../../components/UI/Spinner/Spinner";
 
 class Orders extends Component {
-
   componentWillMount() {
     this.props.onFetchOrders();
   }
