@@ -35,7 +35,7 @@ function removeIngredient(state, action) {
   return {
     ...state,
     ingredients: updatedIngredients,
-    totalPrice: state.totalPrice + INGREDIENT_PRICES[action.ingredientName],
+    totalPrice: state.totalPrice - INGREDIENT_PRICES[action.ingredientName],
     buildingBurger: true,
   };
 }
