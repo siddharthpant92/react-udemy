@@ -9,8 +9,9 @@ import thunk from "redux-thunk";
 import burgerBuilderReducer from "./store/reducers/burgerBuilderReducer";
 import orderReducer from "./store/reducers/orderReducers";
 import authReducer from "./store/reducers/authReducer";
+
 // window param neeed for redux dev tool
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const composeEnhancers = process.env === "development" ?window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ : null || compose;
 
 const rootReducer = combineReducers({
   burgerBuilder: burgerBuilderReducer,
