@@ -3,12 +3,10 @@ import BurgerStyle from "./Burger.module.css";
 import BurgerIngredient from "./BurgerIngredient/BurgerIngredient";
 
 const burger = (props) => {
-  const ingredientsNamesArray = Object.keys(props.ingredients);
-  let transformedIngredients = ingredientsNamesArray
+  let transformedIngredients = Object.keys(props.ingredients)
     .map((ingredientName) => {
       // Converting each element into an array with the size specified as the value from key-value pair
-      const tempArray = Array(props.ingredients[ingredientName]);
-      return [...tempArray].map((_, index) => {
+      return [...Array(props.ingredients[ingredientName])].map((_, index) => {
         return (
           <BurgerIngredient
             key={ingredientName + index}

@@ -5,3 +5,7 @@
 .DS_Store
 
 burger-builder/.env
+
+burger-builder/firebase-debug.log
+
+burger-builder/.firebase/hosting.YnVpbGQ.cache
