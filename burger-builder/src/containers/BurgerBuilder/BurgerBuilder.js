@@ -49,7 +49,7 @@ class BurgerBuilder extends Component {
   };
 
   signInToOrderClickedHandler = () => {
-    this.props.onSetRedirectPath("/checkout")
+    this.props.onSetRedirectPath("/checkout");
     this.props.history.push("/auth");
   };
 
@@ -103,6 +103,17 @@ class BurgerBuilder extends Component {
 
     return (
       <Aux>
+        <p style={{ textAlign: "center" }}>
+          <a
+            style={{ textAlign: "center" }}
+            target="_blank"
+            href="https://github.com/siddharthpant92/react-udemy"
+          >
+            {" "}
+            Github repo link
+          </a>
+        </p>
+
         {this.props.burgerBuilder.firebaseRequestError ? (
           <ErrorModal
             show={this.props.burgerBuilder.firebaseRequestError}
