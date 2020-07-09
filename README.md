@@ -2,6 +2,7 @@
 Udemy course on React
 
 ### Website hosted on firebase: https://react-burger-builder-5a27e.web.app/
+https://firebase.google.com/docs/hosting
 
 #### Required .env values:
  - REACT_APP_FIREBASE_KEY=<firebase_key_for_burger_builder_authentication>
