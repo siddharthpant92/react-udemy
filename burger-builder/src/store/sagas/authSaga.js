@@ -1,8 +1,7 @@
-import { put } from "redux-saga/effects";
-import * as actionTypes from "../actions/actionTypes";
+import { put, delay } from "redux-saga/effects";
+import * as actions from "../actions/indexActions";
 
-export function* logoutSaga(action) {
-  yield put({
-    type: actionTypes.AUTH_LOGOUT,
-  });
+export function* checkAuthTimeoutSaga(action) {
+  yield delay(action.expirationTime * 1000); // redux-saga settimeout
+  yield put(actions.logout());
 }

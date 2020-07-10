@@ -25,17 +25,16 @@ export const authFail = (error) => {
 
 export const logout = () => {
   return {
-    type: actionTypes.AUTH_INITIATE_LOGOUT,
+    type: actionTypes.AUTH_LOGOUT,
   };
 };
 
 // The access token expires after 60 min. If we refresh the page, we lose the state anyway.
 // Ex of this is for when if we leave the page for over an hour without doing anything
 export const checkAuthTimeout = (expirationTime) => {
-  return (dispatch) => {
-    setTimeout(() => {
-      dispatch(logout());
-    }, expirationTime * 1000); //converting 3600sec into ms
+  return {
+    type: actionTypes.AUTH_CHECK_TIMEOUT, //mapped in indexSaga.js
+    expirationTime: expirationTime,
   };
 };
 
