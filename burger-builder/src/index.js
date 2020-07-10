@@ -9,9 +9,11 @@ import thunk from "redux-thunk";
 import burgerBuilderReducer from "./store/reducers/burgerBuilderReducer";
 import orderReducer from "./store/reducers/orderReducers";
 import authReducer from "./store/reducers/authReducer";
+import createSagaMiddleware from "redux-saga";
+import { watchAuth } from "./store/sagas/indexSaga";
 
 // window param neeed for redux dev tool
-const composeEnhancers = process.env === "development" ?window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ : null || compose;
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const rootReducer = combineReducers({
   burgerBuilder: burgerBuilderReducer,
@@ -19,11 +21,15 @@ const rootReducer = combineReducers({
   auth: authReducer,
 });
 
+const sagaMiddleware = createSagaMiddleware();
+
 // applying middleware for async code
 const store = createStore(
   rootReducer,
-  composeEnhancers(applyMiddleware(thunk))
+  composeEnhancers(applyMiddleware(thunk, sagaMiddleware))
 );
+
+sagaMiddleware.run(watchAuth);
 
 ReactDOM.render(
   <Provider store={store}>
