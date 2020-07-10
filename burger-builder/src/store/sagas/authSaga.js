@@ -32,6 +32,7 @@ export function* authUserSaga(action) {
     );
     yield put(actions.checkAuthTimeout(response.data.expiresIn));
   } catch (error) {
+    console.log("authSaga authUserSaga error:", error);
     yield put(actions.authFail(error.response.data.error));
   }
 }

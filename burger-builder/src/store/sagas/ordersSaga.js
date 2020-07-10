@@ -8,6 +8,7 @@ export function* initPurchaseBurgerSaga(action) {
     const response = yield axiosInstance.post("/orders.json", action.orderData);
     yield put(actions.purchaseBurgerSuccess(response.data, action.orderData));
   } catch (error) {
+    console.log("orderSaga initPurchaseBurgerSaga error:", error);
     yield put(actions.purchaseBurgerFail(error));
   }
 }
@@ -23,6 +24,7 @@ export function* fetchAllOrdersSaga() {
     }
     yield put(actions.fetchExistingOrdersSuccess(fetchedOrders));
   } catch (error) {
+    console.log("orderSaga fetchAllOrdersSaga error:", error);
     yield put(actions.fetchExistingOrdersError(error));
   }
 }

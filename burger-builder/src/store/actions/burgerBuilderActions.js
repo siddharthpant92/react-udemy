@@ -29,6 +29,6 @@ export const fetchIngredientsFailed = () => {
 
 export const initIngredients = () => {
   return {
-    type: actionTypes.GET_INITIAL_INGREDIENTS,
+    type: actionTypes.GET_INITIAL_INGREDIENTS_SAGA,
   };
 };

@@ -31,14 +31,14 @@ export const logout = () => {
 // Ex of this is for when if we leave the page for over an hour without doing anything
 export const checkAuthTimeout = (expirationTime) => {
   return {
-    type: actionTypes.AUTH_CHECK_TIMEOUT, //mapped in indexSaga.js
+    type: actionTypes.AUTH_CHECK_TIMEOUT_SAGA, //mapped in indexSaga.js
     expirationTime: expirationTime,
   };
 };
 
 export const auth = (email, password, isSignup) => {
   return {
-    type: actionTypes.AUTH_USER,
+    type: actionTypes.AUTH_USER_SAGA,
     email: email,
     password: password,
     isSignup: isSignup,

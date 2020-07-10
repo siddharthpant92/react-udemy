@@ -23,7 +23,7 @@ export const purchaseBurgerStart = () => {
 
 export const purchaseBurger = (orderData) => {
   return {
-    type: actionTypes.INIT_PURCHASE_BURGER,
+    type: actionTypes.INIT_PURCHASE_BURGER_SAGA,
     orderData: orderData
   };
 };
@@ -56,6 +56,6 @@ export const fetchExistingOrdersStart = () => {
 
 export const fetchOrders = () => {
   return {
-    type: actionTypes.FETCH_ALL_ORDERS
+    type: actionTypes.FETCH_ALL_ORDERS_SAGA
   }
 };

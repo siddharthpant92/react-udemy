@@ -7,6 +7,7 @@ export function* initIngredientsSaga(action) {
     const response = yield axiosInstance.get("/ingredients.json");
     yield put(actions.setIngredients(response.data));
   } catch (error) {
+    console.log("burgerBuilderSaga initIngredientsSaga error:", error);
     yield put(actions.fetchIngredientsFailed(console.error()));
   }
 }
