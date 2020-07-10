@@ -2,6 +2,8 @@ export {
   addIngredient,
   removeIngredient,
   initIngredients,
+  setIngredients,
+  fetchIngredientsFailed,
 } from "./burgerBuilderActions";
 
 export {
@@ -18,5 +20,5 @@ export {
   authStart,
   authSuccess,
   authFail,
-  checkAuthTimeout
+  checkAuthTimeout,
 } from "./authActions";

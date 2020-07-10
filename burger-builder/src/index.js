@@ -10,7 +10,7 @@ import burgerBuilderReducer from "./store/reducers/burgerBuilderReducer";
 import orderReducer from "./store/reducers/orderReducers";
 import authReducer from "./store/reducers/authReducer";
 import createSagaMiddleware from "redux-saga";
-import { watchAuth } from "./store/sagas/indexSaga";
+import { watchAuth, watchBurgerBuilder } from "./store/sagas/indexSaga";
 
 // window param neeed for redux dev tool
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
@@ -30,6 +30,7 @@ const store = createStore(
 );
 
 sagaMiddleware.run(watchAuth);
+sagaMiddleware.run(watchBurgerBuilder);
 
 ReactDOM.render(
   <Provider store={store}>
