@@ -1,6 +1,4 @@
 import * as actionTypes from "./actionTypes";
-import axios from "axios";
-require("dotenv").config();
 
 export const authStart = () => {
   return {
@@ -39,34 +37,11 @@ export const checkAuthTimeout = (expirationTime) => {
 };
 
 export const auth = (email, password, isSignup) => {
-  return (dispatch) => {
-    dispatch(authStart());
-
-    let url =
-      "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=" +
-      process.env.REACT_APP_FIREBASE_KEY;
-    if (!isSignup) {
-      url =
-        "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=" +
-        process.env.REACT_APP_FIREBASE_KEY;
-    }
-
-    const authData = {
-      email: email,
-      password: password,
-      returnSecureToken: true,
-    };
-
-    axios
-      .post(url, authData)
-      .then((response) => {
-        dispatch(authSuccess(response.data.idToken, response.data.localId));
-        dispatch(checkAuthTimeout(response.data.expiresIn));
-      })
-      .catch((error) => {
-        console.log("authActions auth error.resopnse: ", error.response);
-        dispatch(authFail(error.response.data.error));
-      });
+  return {
+    type: actionTypes.AUTH_USER,
+    email: email,
+    password: password,
+    isSignup: isSignup,
   };
 };
 
