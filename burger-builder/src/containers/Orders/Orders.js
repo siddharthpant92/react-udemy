@@ -3,6 +3,7 @@ import Order from "../../components/Order/Order";
 import * as actionTypes from "../../store/actions/indexActions";
 import { connect } from "react-redux";
 import Spinner from "../../components/UI/Spinner/Spinner";
+import ErrorModal from "../../components/UI/ErrorModal/ErrorModal";
 
 class Orders extends Component {
   componentWillMount() {
@@ -11,9 +12,10 @@ class Orders extends Component {
 
   render() {
     let orders = <Spinner />;
-    if (!this.props.loading) {
-      if (this.props.orders.length > 0) {
-        orders = this.props.orders.map((order) => {
+
+    if (!this.props.order.loading) {
+      if (this.props.order.orders.length > 0) {
+        orders = this.props.order.orders.map((order) => {
           return (
             <Order
               key={order.id}
@@ -22,6 +24,8 @@ class Orders extends Component {
             />
           );
         });
+      } else if (this.props.order.firebaseError) {
+        orders = <ErrorModal show={true} />;
       } else {
         orders = <p>No existing orders</p>;
       }
@@ -32,7 +36,7 @@ class Orders extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    ...state.order,
+    order: { ...state.order },
   };
 };
 const mapDispatchToProps = (dispatch) => ({

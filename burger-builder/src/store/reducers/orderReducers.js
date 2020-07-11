@@ -4,6 +4,7 @@ const initialState = {
   orders: [],
   orderLoading: false,
   purchased: false,
+  firebaseError: false
 };
 
 export default (state = initialState, action) => {
@@ -27,7 +28,7 @@ export default (state = initialState, action) => {
       };
 
     case actionTypes.PURCHASE_BURGER_FAIL:
-      return { ...state, orderLoading: false };
+      return { ...state, orderLoading: false, };
 
     case actionTypes.PURCHASE_INIT:
       return { ...state, purchased: false };
@@ -36,10 +37,10 @@ export default (state = initialState, action) => {
       return { ...state, orderLoading: true };
 
     case actionTypes.FETCH_EXISTING_ORDERS_SUCCESS:
-      return { ...state, orders: action.orders, orderLoading: false };
+      return { ...state, orders: action.orders, orderLoading: false, firebaseError: false };
 
     case actionTypes.FETCH_EXISTING_ORDERS_FAIL:
-      return { ...state, orderLoading: true };
+      return { ...state, orderLoading: false, firebaseError: true };
 
     default:
       return state;
