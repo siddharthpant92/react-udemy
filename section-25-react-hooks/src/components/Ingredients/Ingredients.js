@@ -15,21 +15,6 @@ function Ingredients() {
   If we do not supply a second argument, then it runs after every render cycle.
   If we provide an empyty error: it acts like componentDidMount()
   */
-  useEffect(() => {
-    fetch("https://react-hooks-a47e8.firebaseio.com/ingredients.json")
-      .then((response) => response.json())
-      .then((responseData) => {
-        const loadedIngredients = [];
-        for (const key in responseData) {
-          loadedIngredients.push({
-            id: key,
-            title: responseData[key].title,
-            amount: responseData[key].amount,
-          });
-        }
-        setUserIngredients(loadedIngredients);
-      });
-  }, []);
 
   const addIngredientHandler = (newIngredient) => {
     fetch("https://react-hooks-a47e8.firebaseio.com/ingredients.json", {
@@ -49,9 +34,19 @@ function Ingredients() {
   };
 
   const removeItemHandler = (clickedItemId) => {
-    setUserIngredients(
-      userIngredients.filter((ingredient) => ingredient.id !== clickedItemId)
-    );
+    fetch(
+      `https://react-hooks-a47e8.firebaseio.com/ingredients/${clickedItemId}/.json`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    ).then((response) => {
+      setUserIngredients(
+        userIngredients.filter((ingredient) => ingredient.id !== clickedItemId)
+      );
+    });
   };
 
   const filteredIngredientsHandler = useCallback((filteredIngredients) => {
