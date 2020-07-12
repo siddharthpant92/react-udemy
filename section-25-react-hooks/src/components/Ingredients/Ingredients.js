@@ -2,9 +2,12 @@ import React, { useState, useEffect, useCallback } from "react";
 import IngredientList from "./IngredientList";
 import IngredientForm from "./IngredientForm";
 import Search from "./Search";
+import ErrorModal from "../UI/ErrorModal";
 
 function Ingredients() {
   const [userIngredients, setUserIngredients] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState();
 
   /*
   The second argument is the list of dependencies which triggers this. Meaning, everytime one of those entities
@@ -17,6 +20,7 @@ function Ingredients() {
   */
 
   const addIngredientHandler = (newIngredient) => {
+    setIsLoading(true);
     fetch("https://react-hooks-a47e8.firebaseio.com/ingredients.json", {
       method: "POST",
       body: JSON.stringify(newIngredient),
@@ -30,10 +34,16 @@ function Ingredients() {
           ...prevIngredients,
           { id: responseData.id, ...newIngredient },
         ]);
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        setError(error.message);
+        setIsLoading(false);
       });
   };
 
   const removeItemHandler = (clickedItemId) => {
+    setIsLoading(true);
     fetch(
       `https://react-hooks-a47e8.firebaseio.com/ingredients/${clickedItemId}/.json`,
       {
@@ -42,21 +52,36 @@ function Ingredients() {
           "Content-Type": "application/json",
         },
       }
-    ).then((response) => {
-      setUserIngredients(
-        userIngredients.filter((ingredient) => ingredient.id !== clickedItemId)
-      );
-    });
+    )
+      .then((response) => {
+        setUserIngredients(
+          userIngredients.filter(
+            (ingredient) => ingredient.id !== clickedItemId
+          )
+        );
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        setError(error.message);
+        setIsLoading(false);
+      });
   };
 
   const filteredIngredientsHandler = useCallback((filteredIngredients) => {
     setUserIngredients(filteredIngredients);
   }, []);
 
+  const clearError = () => {
+    // React batches these state updates so that there is 1 render cycle, and not 2 after each update
+    setError();
+  };
+
   return (
     <div className="App">
+      {error && <ErrorModal onClose={clearError}>{error}</ErrorModal>}
       <IngredientForm
         onAddIngredient={(newIngredient) => addIngredientHandler(newIngredient)}
+        loading={isLoading}
       />
 
       <section>
