@@ -20,10 +20,31 @@ const ingredientReducer = (currentIngredients, action) => {
   }
 };
 
+const httpReducer = (httpState, action) => {
+  switch (action.type) {
+    case "SEND":
+      return { loading: true, error: null };
+
+    case "RESPONSE":
+      return { ...httpState, loading: false };
+
+    case "ERROR":
+      return { loading: false, error: action.error };
+
+    case "CLEAR":
+      return { ...httpState, error: null };
+
+    default:
+      throw new Error("Ingredients -> httpReducer -> Case not handled");
+  }
+};
+
 function Ingredients() {
   const [userIngredients, dispatch] = useReducer(ingredientReducer, []);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState();
+  const [httpState, dispatchHttp] = useReducer(httpReducer, {
+    loading: false,
+    error: "",
+  });
 
   /*
   The second argument is the list of dependencies which triggers this. Meaning, everytime one of those entities
@@ -36,7 +57,7 @@ function Ingredients() {
   */
 
   const addIngredientHandler = (newIngredient) => {
-    setIsLoading(true);
+    dispatchHttp({ type: "SEND" });
     fetch("https://react-hooks-a47e8.firebaseio.com/ingredients.json", {
       method: "POST",
       body: JSON.stringify(newIngredient),
@@ -50,16 +71,15 @@ function Ingredients() {
           type: "ADD",
           newIngredient: { id: responseData.id, ...newIngredient },
         });
-        setIsLoading(false);
+        dispatchHttp({ type: "RESPONSE" });
       })
       .catch((error) => {
-        setError(error.message);
-        setIsLoading(false);
+        dispatchHttp({ type: "ERROR", error: error.message });
       });
   };
 
   const removeItemHandler = (clickedItemId) => {
-    setIsLoading(true);
+    dispatchHttp({ type: "SEND" });
     fetch(
       `https://react-hooks-a47e8.firebaseio.com/ingredients/${clickedItemId}/.json`,
       {
@@ -74,11 +94,10 @@ function Ingredients() {
           type: "DELETE",
           id: clickedItemId,
         });
-        setIsLoading(false);
+        dispatchHttp({ type: "RESPONSE" });
       })
       .catch((error) => {
-        setError(error.message);
-        setIsLoading(false);
+        dispatchHttp({ type: "ERROR", error: error.message });
       });
   };
 
@@ -88,15 +107,17 @@ function Ingredients() {
 
   const clearError = () => {
     // React batches these state updates so that there is 1 render cycle, and not 2 after each update
-    setError();
+    dispatchHttp({ type: "CLEAR" });
   };
 
   return (
     <div className="App">
-      {error && <ErrorModal onClose={clearError}>{error}</ErrorModal>}
+      {httpState.error && (
+        <ErrorModal onClose={clearError}>{httpState.error}</ErrorModal>
+      )}
       <IngredientForm
         onAddIngredient={(newIngredient) => addIngredientHandler(newIngredient)}
-        loading={isLoading}
+        loading={httpState.loading}
       />
 
       <section>
