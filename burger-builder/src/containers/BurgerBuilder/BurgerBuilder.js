@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Aux from "../../hoc/Aux/Aux";
 import Burger from "../../components/Burger/Burger";
 import BuildControls from "../../components/Burger/BuildControls/BuildControls";
@@ -6,19 +6,42 @@ import Modal from "../../components/UI/Modal/Modal";
 import OrderSummary from "../../components/Burger/OrderSummary/OrderSummary";
 import Spinner from "../../components/UI/Spinner/Spinner";
 import ErrorModal from "../../components/UI/ErrorModal/ErrorModal";
-import { connect } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import * as actions from "../../store/actions/indexActions";
 
 const BurgerBuilder = (props) => {
-  const { onInitIngredients } = props;
   const [orderConfirmed, setOrderConfirmed] = useState(false);
+
+  const dispatch = useDispatch();
+  const burgerBuilder = useSelector((state) => {
+    return { ...state.burgerBuilder };
+  });
+  const auth = useSelector((state) => {
+    return { ...state.auth };
+  });
+
+  const addIngredientHandler = (ingredientName) =>
+    dispatch(actions.addIngredient(ingredientName));
+
+  const removeIngredientHandler = (ingredientName) =>
+    dispatch(actions.removeIngredient(ingredientName));
+
+  const onInitIngredients = useCallback(
+    () => dispatch(actions.initIngredients()),
+    [dispatch]
+  );
+
+  const onInitPurchase = () => dispatch(actions.purchaseInit());
+
+  const onSetRedirectPath = (path) =>
+    dispatch(actions.setAuthRedirectPath(path));
 
   useEffect(() => {
     onInitIngredients();
   }, [onInitIngredients]);
 
   const checkPurchesedState = () => {
-    const ingredientsList = props.burgerBuilder.ingredients;
+    const ingredientsList = burgerBuilder.ingredients;
     const sum = Object.keys(ingredientsList)
       .map((ingredientName) => {
         return ingredientsList[ingredientName];
@@ -30,7 +53,7 @@ const BurgerBuilder = (props) => {
   };
 
   const continuePurchase = () => {
-    props.onInitPurchase();
+    onInitPurchase();
     setOrderConfirmed(true);
   };
 
@@ -43,13 +66,13 @@ const BurgerBuilder = (props) => {
   };
 
   const signInToOrderClickedHandler = () => {
-    props.onSetRedirectPath("/checkout");
+    onSetRedirectPath("/checkout");
     props.history.push("/auth");
   };
 
   // Finding out for which ingredients the 'Less' button should be disabled
   const disabledInfo = {
-    ...props.burgerBuilder.ingredients,
+    ...burgerBuilder.ingredients,
   };
   for (let key in disabledInfo) {
     disabledInfo[key] = disabledInfo[key] <= 0;
@@ -58,37 +81,37 @@ const BurgerBuilder = (props) => {
   let orderSummary = null;
   let burger = null;
 
-  if (!props.burgerBuilder.ingredients) {
+  if (!burgerBuilder.ingredients) {
     // Initially before the GET request to fetch ingredients hasn't completed, display the spinner
     burger = <Spinner />;
   } else {
     // Create the burger with the base ingredients fetched from firebase
     burger = (
       <Aux>
-        <Burger ingredients={props.burgerBuilder.ingredients} />;
+        <Burger ingredients={burgerBuilder.ingredients} />;
         <BuildControls
           addIngredient={
-            (ingredientType) => props.addIngredientHandler(ingredientType) // Getting a value passed back from BuildControls
+            (ingredientType) => addIngredientHandler(ingredientType) // Getting a value passed back from BuildControls
           }
           removeIngredient={(ingredientType) =>
-            props.removeIngredientHandler(ingredientType)
+            removeIngredientHandler(ingredientType)
           }
           disabled={disabledInfo}
-          price={props.burgerBuilder.totalPrice}
+          price={burgerBuilder.totalPrice}
           purchasable={checkPurchesedState()}
           continuePurchase={continuePurchase}
           signInToOrderClicked={signInToOrderClickedHandler}
-          isAuth={props.auth.token !== null}
+          isAuth={auth.token !== null}
         />
       </Aux>
     );
     // Creating thr OrderSummary component after we get the ingredients list
     orderSummary = (
       <OrderSummary
-        ingredients={props.burgerBuilder.ingredients}
+        ingredients={burgerBuilder.ingredients}
         purchaseCancelled={purchaseCancelHandler}
         purchaseConfirmed={purchaseConfirmHandler}
-        totalPrice={props.burgerBuilder.totalPrice}
+        totalPrice={burgerBuilder.totalPrice}
       />
     );
   }
@@ -106,9 +129,9 @@ const BurgerBuilder = (props) => {
         </a>
       </p>
 
-      {props.burgerBuilder.firebaseRequestError ? (
+      {burgerBuilder.firebaseRequestError ? (
         <ErrorModal
-          show={props.burgerBuilder.firebaseRequestError}
+          show={burgerBuilder.firebaseRequestError}
           modalClosed={purchaseCancelHandler}
         />
       ) : (
@@ -121,25 +144,4 @@ const BurgerBuilder = (props) => {
   );
 };
 
-const mapStateToProps = (state) => {
-  return {
-    burgerBuilder: { ...state.burgerBuilder },
-    auth: { ...state.auth },
-  };
-};
-
-const mapDispatchToProps = (dispatch) => ({
-  addIngredientHandler: (ingredientName) =>
-    dispatch(actions.addIngredient(ingredientName)),
-
-  removeIngredientHandler: (ingredientName) =>
-    dispatch(actions.removeIngredient(ingredientName)),
-
-  onInitIngredients: () => dispatch(actions.initIngredients()),
-
-  onInitPurchase: () => dispatch(actions.purchaseInit()),
-
-  onSetRedirectPath: (path) => dispatch(actions.setAuthRedirectPath(path)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(BurgerBuilder);
+export default BurgerBuilder;
