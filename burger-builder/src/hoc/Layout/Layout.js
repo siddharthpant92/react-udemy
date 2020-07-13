@@ -13,7 +13,7 @@ const Layout = (props) => {
   };
 
   const menuButtonClickedHandler = () => {
-    setShowSideDrawer((prevState) => !prevState.showSideDrawer);
+    setShowSideDrawer(true);
   };
 
   return (

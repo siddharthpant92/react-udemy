@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import Button from "../../components/UI/Button/Button";
 import Input from "../../components/UI/Input/Input";
 import Spinner from "../../components/UI/Spinner/Spinner";
@@ -7,42 +7,41 @@ import * as actions from "../../store/actions/indexActions";
 import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
 
-class Auth extends Component {
-  state = {
-    controls: {
-      email: {
-        elementType: "input",
-        elementConfig: {
-          type: "email",
-          placeholder: "email address",
-        },
-        value: "",
-        validation: {
-          required: true,
-          isEmail: true,
-          touched: false,
-        },
-        valid: false,
+const Auth = (props) => {
+  const [controls, setControls] = useState({
+    email: {
+      elementType: "input",
+      elementConfig: {
+        type: "email",
+        placeholder: "email address",
       },
-      password: {
-        elementType: "input",
-        elementConfig: {
-          type: "password",
-          placeholder: "password address",
-        },
-        value: "",
-        validation: {
-          required: true,
-          minLength: 6,
-          touched: false,
-        },
-        valid: false,
+      value: "",
+      validation: {
+        required: true,
+        isEmail: true,
+        touched: false,
       },
+      valid: false,
     },
-    isSignup: true,
-  };
+    password: {
+      elementType: "input",
+      elementConfig: {
+        type: "password",
+        placeholder: "password address",
+      },
+      value: "",
+      validation: {
+        required: true,
+        minLength: 6,
+        touched: false,
+      },
+      valid: false,
+    },
+  });
 
-  checkValidity = (value, rules) => {
+  const [isSignup, setIsSignup] = useState(true);
+
+  const checkValidity = (value, rules) => {
     let isValid = false;
     if (rules.required) {
       isValid = value.trim() !== "";
@@ -51,99 +50,89 @@ class Auth extends Component {
     return isValid;
   };
 
-  inputChangedHandler = (event, controlName) => {
+  const inputChangedHandler = (event, controlName) => {
     const updatedControls = {
-      ...this.state.controls,
+      ...controls,
       [controlName]: {
-        ...this.state.controls[controlName],
+        ...controls[controlName],
         value: event.target.value,
-        valid: this.checkValidity(
+        valid: checkValidity(
           event.target.value,
-          this.state.controls[controlName].validation
+          controls[controlName].validation
         ),
         touched: true,
       },
     };
 
-    this.setState({
-      controls: updatedControls,
-    });
+    setControls(updatedControls);
   };
 
-  submitHandler = (event) => {
+  const submitHandler = (event) => {
     event.preventDefault();
 
-    if (this.state.controls.password.value.length < 6) {
+    if (controls.password.value.length < 6) {
       alert("password should have minimum length of 6");
     } else {
-      this.props.onAuth(
-        this.state.controls.email.value,
-        this.state.controls.password.value,
-        this.state.isSignup
-      );
+      props.onAuth(controls.email.value, controls.password.value, isSignup);
     }
   };
 
-  switchAuthModeHandler = () => {
-    this.setState((prevState) => {
-      return { isSignup: !prevState.isSignup };
+  const switchAuthModeHandler = () => {
+    setIsSignup(!isSignup);
+  };
+
+  const formElementArray = [];
+  for (let key in controls) {
+    formElementArray.push({
+      id: key,
+      config: controls[key],
     });
-  };
-
-  render() {
-    const formElementArray = [];
-    for (let key in this.state.controls) {
-      formElementArray.push({
-        id: key,
-        config: this.state.controls[key],
-      });
-    }
-
-    let form = formElementArray.map((formElement) => (
-      <Input
-        key={formElement.id}
-        elementType={formElement.config.elementType}
-        elementConfig={formElement.config.elementConfig}
-        value={formElement.config.value}
-        invalid={!formElement.config.validation.valid}
-        changed={(event) => this.inputChangedHandler(event, formElement.id)}
-      />
-    ));
-
-    if (this.props.auth.loading) {
-      form = <Spinner />;
-    }
-
-    let errorMessage = null;
-    if (this.props.auth.error) {
-      errorMessage = <p>{this.props.auth.error.message}</p>;
-    }
-
-    let authRedirect = null;
-    if (this.props.auth.token) {
-      authRedirect = <Redirect to={this.props.auth.authRedirectPath} />;
-    }
-
-    return (
-      <div className={AuthStyles.Auth}>
-        {authRedirect}
-        {errorMessage}
-        <p>
-          Note: no real custom validation checking for input fields. Only
-          placeholder validation done. See code. Don't care about this part.
-          Focusing more on react stuff
-        </p>
-        <form onSubmit={this.submitHandler}>
-          {form}
-          <Button btnType="Success">Submit</Button>
-        </form>
-        <Button btnType="Danger" clicked={this.switchAuthModeHandler}>
-          Switch to {this.state.isSignup ? "Sign in" : "Sign up"}
-        </Button>
-      </div>
-    );
   }
-}
+
+  let form = formElementArray.map((formElement) => (
+    <Input
+      key={formElement.id}
+      elementType={formElement.config.elementType}
+      elementConfig={formElement.config.elementConfig}
+      value={formElement.config.value}
+      invalid={!formElement.config.validation.valid}
+      changed={(event) => inputChangedHandler(event, formElement.id)}
+    />
+  ));
+
+  if (props.auth.loading) {
+    form = <Spinner />;
+  }
+
+  let errorMessage = null;
+  if (props.auth.error) {
+    errorMessage = <p>{props.auth.error.message}</p>;
+  }
+
+  let authRedirect = null;
+  if (props.auth.token) {
+    authRedirect = <Redirect to={props.auth.authRedirectPath} />;
+  }
+
+  return (
+    <div className={AuthStyles.Auth}>
+      {authRedirect}
+      {errorMessage}
+      <p>
+        Note: no real custom validation checking for input fields. Only
+        placeholder validation done. See code. Don't care about part. Focusing
+        more on react stuff
+      </p>
+      <form onSubmit={submitHandler}>
+        {form}
+        <Button btnType="Success">Submit</Button>
+      </form>
+      <Button btnType="Danger" clicked={switchAuthModeHandler}>
+        Switch to {isSignup ? "Sign in" : "Sign up"}
+      </Button>
+    </div>
+  );
+};
 
 const mapStateToProps = (state) => ({
   auth: { ...state.auth },
