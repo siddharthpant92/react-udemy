@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import Aux from "../../hoc/Aux/Aux";
 import Burger from "../../components/Burger/Burger";
 import BuildControls from "../../components/Burger/BuildControls/BuildControls";
@@ -9,22 +9,15 @@ import ErrorModal from "../../components/UI/ErrorModal/ErrorModal";
 import { connect } from "react-redux";
 import * as actions from "../../store/actions/indexActions";
 
-class BurgerBuilder extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      orderConfirmed: false,
-    };
-  }
+const BurgerBuilder = (props) => {
+  const [orderConfirmed, setOrderConfirmed] = useState(false);
 
-  componentDidMount() {
-    // Valid lifecycle method for side affects like making an api call
-    // Fetching the ingredients for a base burger for initial state
-    this.props.onInitIngredients();
-  }
+  useEffect(() => {
+    props.onInitIngredients();
+  }, []);
 
-  checkPurchesedState = () => {
-    const ingredientsList = this.props.burgerBuilder.ingredients;
+  const checkPurchesedState = () => {
+    const ingredientsList = props.burgerBuilder.ingredients;
     const sum = Object.keys(ingredientsList)
       .map((ingredientName) => {
         return ingredientsList[ingredientName];
@@ -35,103 +28,97 @@ class BurgerBuilder extends Component {
     return sum > 0;
   };
 
-  continuePurchase = () => {
-    this.props.onInitPurchase();
-    this.setState({ orderConfirmed: true });
+  const continuePurchase = () => {
+    props.onInitPurchase();
+    setOrderConfirmed(true);
   };
 
-  purchaseCancelHandler = () => {
-    this.setState({ orderConfirmed: false, firebaseRequestError: false });
+  const purchaseCancelHandler = () => {
+    setOrderConfirmed(false);
   };
 
-  purchaseConfirmHandler = () => {
-    this.props.history.push("/checkout");
+  const purchaseConfirmHandler = () => {
+    props.history.push("/checkout");
   };
 
-  signInToOrderClickedHandler = () => {
-    this.props.onSetRedirectPath("/checkout");
-    this.props.history.push("/auth");
+  const signInToOrderClickedHandler = () => {
+    props.onSetRedirectPath("/checkout");
+    props.history.push("/auth");
   };
 
-  render() {
-    // Finding out for which ingredients the 'Less' button should be disabled
-    const disabledInfo = {
-      ...this.props.burgerBuilder.ingredients,
-    };
-    for (let key in disabledInfo) {
-      disabledInfo[key] = disabledInfo[key] <= 0;
-    }
+  // Finding out for which ingredients the 'Less' button should be disabled
+  const disabledInfo = {
+    ...props.burgerBuilder.ingredients,
+  };
+  for (let key in disabledInfo) {
+    disabledInfo[key] = disabledInfo[key] <= 0;
+  }
 
-    let orderSummary = null;
-    let burger = null;
+  let orderSummary = null;
+  let burger = null;
 
-    if (!this.props.burgerBuilder.ingredients) {
-      // Initially before the GET request to fetch ingredients hasn't completed, display the spinner
-      burger = <Spinner />;
-    } else {
-      // Create the burger with the base ingredients fetched from firebase
-      burger = (
-        <Aux>
-          <Burger ingredients={this.props.burgerBuilder.ingredients} />;
-          <BuildControls
-            addIngredient={
-              (ingredientType) =>
-                this.props.addIngredientHandler(ingredientType) // Getting a value passed back from BuildControls
-            }
-            removeIngredient={(ingredientType) =>
-              this.props.removeIngredientHandler(ingredientType)
-            }
-            disabled={disabledInfo}
-            price={this.props.burgerBuilder.totalPrice}
-            purchasable={this.checkPurchesedState()}
-            continuePurchase={this.continuePurchase}
-            signInToOrderClicked={this.signInToOrderClickedHandler}
-            isAuth={this.props.auth.token !== null}
-          />
-        </Aux>
-      );
-      // Creating thr OrderSummary component after we get the ingredients list
-      orderSummary = (
-        <OrderSummary
-          ingredients={this.props.burgerBuilder.ingredients}
-          purchaseCancelled={this.purchaseCancelHandler}
-          purchaseConfirmed={this.purchaseConfirmHandler}
-          totalPrice={this.props.burgerBuilder.totalPrice}
-        />
-      );
-    }
-
-    return (
+  if (!props.burgerBuilder.ingredients) {
+    // Initially before the GET request to fetch ingredients hasn't completed, display the spinner
+    burger = <Spinner />;
+  } else {
+    // Create the burger with the base ingredients fetched from firebase
+    burger = (
       <Aux>
-        <p style={{ textAlign: "center" }}>
-          <a
-            style={{ textAlign: "center" }}
-            target="_blank"
-            href="https://github.com/siddharthpant92/react-udemy"
-          >
-            {" "}
-            Github repo link
-          </a>
-        </p>
-
-        {this.props.burgerBuilder.firebaseRequestError ? (
-          <ErrorModal
-            show={this.props.burgerBuilder.firebaseRequestError}
-            modalClosed={this.purchaseCancelHandler}
-          />
-        ) : (
-          <Modal
-            show={this.state.orderConfirmed}
-            modalClosed={this.purchaseCancelHandler}
-          >
-            {orderSummary}
-          </Modal>
-        )}
-        {burger}
+        <Burger ingredients={props.burgerBuilder.ingredients} />;
+        <BuildControls
+          addIngredient={
+            (ingredientType) => props.addIngredientHandler(ingredientType) // Getting a value passed back from BuildControls
+          }
+          removeIngredient={(ingredientType) =>
+            props.removeIngredientHandler(ingredientType)
+          }
+          disabled={disabledInfo}
+          price={props.burgerBuilder.totalPrice}
+          purchasable={checkPurchesedState()}
+          continuePurchase={continuePurchase}
+          signInToOrderClicked={signInToOrderClickedHandler}
+          isAuth={props.auth.token !== null}
+        />
       </Aux>
     );
+    // Creating thr OrderSummary component after we get the ingredients list
+    orderSummary = (
+      <OrderSummary
+        ingredients={props.burgerBuilder.ingredients}
+        purchaseCancelled={purchaseCancelHandler}
+        purchaseConfirmed={purchaseConfirmHandler}
+        totalPrice={props.burgerBuilder.totalPrice}
+      />
+    );
   }
-}
+
+  return (
+    <Aux>
+      <p style={{ textAlign: "center" }}>
+        <a
+          style={{ textAlign: "center" }}
+          target="_blank"
+          href="https://github.com/siddharthpant92/react-udemy"
+        >
+          {" "}
+          Github repo link
+        </a>
+      </p>
+
+      {props.burgerBuilder.firebaseRequestError ? (
+        <ErrorModal
+          show={props.burgerBuilder.firebaseRequestError}
+          modalClosed={purchaseCancelHandler}
+        />
+      ) : (
+        <Modal show={orderConfirmed} modalClosed={purchaseCancelHandler}>
+          {orderSummary}
+        </Modal>
+      )}
+      {burger}
+    </Aux>
+  );
+};
 
 const mapStateToProps = (state) => {
   return {
@@ -143,10 +130,14 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => ({
   addIngredientHandler: (ingredientName) =>
     dispatch(actions.addIngredient(ingredientName)),
+
   removeIngredientHandler: (ingredientName) =>
     dispatch(actions.removeIngredient(ingredientName)),
+
   onInitIngredients: () => dispatch(actions.initIngredients()),
+
   onInitPurchase: () => dispatch(actions.purchaseInit()),
+
   onSetRedirectPath: (path) => dispatch(actions.setAuthRedirectPath(path)),
 });
 
