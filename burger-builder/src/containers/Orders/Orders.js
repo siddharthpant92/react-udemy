@@ -6,10 +6,11 @@ import Spinner from "../../components/UI/Spinner/Spinner";
 import ErrorModal from "../../components/UI/ErrorModal/ErrorModal";
 
 const Orders = (props) => {
+  const { onFetchOrders } = props;
   // Mimicing componentDidMount
   useEffect(() => {
-    props.onFetchOrders();
-  }, []);
+    onFetchOrders();
+  }, [onFetchOrders]);
 
   let orders = <Spinner />;
 

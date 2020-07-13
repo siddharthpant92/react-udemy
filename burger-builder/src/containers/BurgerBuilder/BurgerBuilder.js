@@ -10,11 +10,12 @@ import { connect } from "react-redux";
 import * as actions from "../../store/actions/indexActions";
 
 const BurgerBuilder = (props) => {
+  const { onInitIngredients } = props;
   const [orderConfirmed, setOrderConfirmed] = useState(false);
 
   useEffect(() => {
-    props.onInitIngredients();
-  }, []);
+    onInitIngredients();
+  }, [onInitIngredients]);
 
   const checkPurchesedState = () => {
     const ingredientsList = props.burgerBuilder.ingredients;
